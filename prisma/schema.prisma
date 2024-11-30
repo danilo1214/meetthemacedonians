@@ -26,6 +26,95 @@ model Post {
     @@index([name])
 }
 
+model FoodType {
+    id               Int               @id @default(autoincrement())
+    name             String
+    mkName           String
+    profileFoodTypes ProfileFoodType[]
+}
+
+model ProfileFoodType {
+    profile    Profile  @relation(fields: [profileId], references: [id])
+    foodType   FoodType @relation(fields: [foodTypeId], references: [id])
+    profileId  Int
+    foodTypeId Int
+
+    @@id([profileId, foodTypeId])
+}
+
+model Drink {
+    id            Int            @id @default(autoincrement())
+    name          String
+    mkName        String
+    profiledrinks ProfileDrink[]
+}
+
+model ProfileDrink {
+    profile   Profile @relation(fields: [profileId], references: [id])
+    drink     Drink   @relation(fields: [drinkId], references: [id])
+    profileId Int
+    drinkId   Int
+
+    @@id([profileId, drinkId])
+}
+
+model Language {
+    id               Int                @id @default(autoincrement())
+    name             String
+    ProfileLangugage ProfileLangugage[]
+}
+
+model ProfileLangugage {
+    profile    Profile  @relation(fields: [profileId], references: [id])
+    language   Language @relation(fields: [languageId], references: [id])
+    profileId  Int
+    languageId Int
+
+    @@id([profileId, languageId])
+}
+
+model Address {
+    id               Int     @id @default(autoincrement())
+    street           String
+    city             String
+    state            String
+    country          String
+    formattedAddress String
+    postalCode       String
+    latitude         Float
+    longitude        Float
+    profileId        Int     @unique
+    profile          Profile @relation(fields: [profileId], references: [id])
+}
+
+enum ProfileStatus {
+    PENDING
+    APPROVED
+    REJECTED
+}
+
+model Profile {
+    id               Int                @id @default(autoincrement())
+    familyName       String
+    createdAt        DateTime           @default(now())
+    updatedAt        DateTime           @updatedAt
+    dateOfBirth      DateTime
+    createdBy        User               @relation(fields: [createdById], references: [id])
+    createdById      String             @unique
+    photoUrl         String
+    title            String
+    description      String
+    status           ProfileStatus
+    rejectedInfo     String
+    maximumPeople    Int
+    isSmoking        Boolean
+    neighbourhood    String
+    profileLanguages ProfileLangugage[]
+    profileDrinks    ProfileDrink[]
+    profileFoodTypes ProfileFoodType[]
+    Address          Address?
+}
+
 // Necessary for Next auth
 model Account {
     id                       String  @id @default(cuid())
@@ -34,11 +123,11 @@ model Account {
     provider                 String
     providerAccountId        String
     refresh_token            String? @db.Text
-    access_token             String? // @db.Text
+    access_token             String? @db.Text
     expires_at               Int?
     token_type               String?
     scope                    String?
-    id_token                 String? // @db.Text
+    id_token                 String? @db.Text
     session_state            String?
     user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
     refresh_token_expires_in Int?
@@ -63,6 +152,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
+    Profile       Profile?
 }
 
 model VerificationToken {
