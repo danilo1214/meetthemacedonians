@@ -1,5 +1,10 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { type DefaultSession, type NextAuthConfig } from "next-auth";
+import { type GetServerSidePropsContext } from "next";
+import {
+  getServerSession,
+  type NextAuthOptions,
+  type DefaultSession,
+} from "next-auth";
 import Google from "next-auth/providers/google";
 import { env } from "~/env";
 
@@ -31,7 +36,7 @@ declare module "next-auth" {
  *
  * @see https://next-auth.js.org/configuration/options
  */
-export const authConfig = {
+export const authConfig: NextAuthOptions = {
   providers: [
     Google({
       clientId: env.GOOGLE_CLIENT_ID,
@@ -48,4 +53,16 @@ export const authConfig = {
       },
     }),
   },
-} satisfies NextAuthConfig;
+};
+
+/**
+ * Wrapper for `getServerSession` so that you don't need to import the `authOptions` in every file.
+ *
+ * @see https://next-auth.js.org/configuration/nextjs
+ */
+export const getServerAuthSession = (ctx: {
+  req: GetServerSidePropsContext["req"];
+  res: GetServerSidePropsContext["res"];
+}) => {
+  return getServerSession(ctx.req, ctx.res, authConfig);
+};
