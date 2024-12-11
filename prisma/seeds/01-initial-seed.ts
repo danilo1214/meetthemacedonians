@@ -67,24 +67,31 @@ async function main() {
     data: [
       {
         name: "English",
+        mkName: "Англиски",
       },
       {
         name: "Macedonian",
+        mkName: "Македонски",
       },
       {
         name: "Turkish",
+        mkName: "Турски",
       },
       {
         name: "Serbian",
+        mkName: "Српски",
       },
       {
         name: "German",
+        mkName: "Германски",
       },
       {
         name: "French",
+        mkName: "Француски",
       },
       {
         name: "Albanian",
+        mkName: "Албански",
       },
     ],
   });

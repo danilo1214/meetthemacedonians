@@ -1,6 +1,6 @@
 import React from "react";
 
-interface CheckboxSelectItem<T> {
+export interface CheckboxSelectItem<T> {
   value: T;
   label: string;
 }
@@ -36,15 +36,17 @@ export const MultiCheckboxSelect = <T extends string | number>({
       {label && <label>{label}</label>}
       <ul style={{ listStyleType: "none" }}>
         {options.map((option) => (
-          <li key={option.value}>
+          <li key={`${option.value}${option.label}`}>
             <input
-              id={`${option.value}`}
+              id={`${option.value}${option.label}`}
               type="checkbox"
               value={option.value}
               checked={isSelected(option.value)}
               onChange={() => handleChange(option.value)}
             />
-            <label htmlFor={`${option.value}`}>{option.label}</label>
+            <label htmlFor={`${option.value}${option.label}`}>
+              {option.label}
+            </label>
           </li>
         ))}
       </ul>

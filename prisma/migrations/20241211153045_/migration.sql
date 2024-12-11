@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `Language` ADD COLUMN `mkName` VARCHAR(191) NOT NULL DEFAULT '';

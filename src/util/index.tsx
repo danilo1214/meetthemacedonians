@@ -1,4 +1,7 @@
+import { CheckboxProps } from "@headlessui/react";
+import { type Drink, type FoodType, type Language } from "@prisma/client";
 import { getImageProps } from "next/image";
+import { type CheckboxSelectItem } from "~/components/generic/MultiCheckboxSelect";
 
 export const getBackgroundImageStyle = ({
   alt,
@@ -34,4 +37,10 @@ export const getBackgroundImageStyle = ({
   const backgroundImage = `image-set(${imageSet})`;
 
   return { backgroundImage };
+};
+
+export const getSelectItemsFromProfileSelectableData = (
+  arr: Language[] | FoodType[] | Drink[],
+): CheckboxSelectItem<number>[] => {
+  return arr.map((i) => ({ label: i.mkName, value: i.id }));
 };
