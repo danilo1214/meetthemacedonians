@@ -7,49 +7,60 @@ export interface CheckboxSelectItem<T> {
 
 interface MultiCheckboxSelectProps<T> {
   options: CheckboxSelectItem<T>[];
-  value: T[];
+  value?: T[];
+  border?: boolean;
   label?: string;
   onChange: (value: T[]) => void;
 }
 
-export const MultiCheckboxSelect = <T extends string | number>({
+export const MultiCheckboxSelect = <T extends object>({
   options,
   label,
   value,
+  border = true,
   onChange,
 }: MultiCheckboxSelectProps<T>) => {
+  // Helper function to compare objects
+  const isEqual = (a: T, b: T) => JSON.stringify(a) === JSON.stringify(b);
+
   const isSelected = (val: T) => {
-    return value.includes(val);
+    return value?.some((v) => isEqual(v, val));
   };
 
   const handleChange = (val: T) => {
-    const index = value.indexOf(val);
-    if (index > -1) {
-      onChange([...value.slice(0, index), ...value.slice(index + 1)]);
+    if (!value) {
+      onChange([val]);
+    } else if (isSelected(val)) {
+      onChange(value.filter((v) => !isEqual(v, val))); // Remove the object
     } else {
-      onChange([...value, val]);
+      onChange([...value, val]); // Add the object
     }
   };
 
   return (
-    <div>
-      {label && <label>{label}</label>}
-      <ul style={{ listStyleType: "none" }}>
-        {options.map((option) => (
-          <li key={`${option.value}${option.label}`}>
-            <input
-              id={`${option.value}${option.label}`}
-              type="checkbox"
-              value={option.value}
-              checked={isSelected(option.value)}
-              onChange={() => handleChange(option.value)}
-            />
-            <label htmlFor={`${option.value}${option.label}`}>
-              {option.label}
-            </label>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <>
+      <div className="flex gap-x-10">
+        {label && <div className="w-32 text-right">{label}</div>}
+        <ul style={{ listStyleType: "none" }} className="space-y-2">
+          {options.map((option) => (
+            <li key={`${option.label}`}>
+              <input
+                id={`${option.label}`}
+                type="checkbox"
+                checked={isSelected(option.value)}
+                onChange={() => handleChange(option.value)}
+              />
+              <label htmlFor={`${option.label}`} className="ml-1">
+                {option.label}
+              </label>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {border && (
+        <hr className="my-8 h-px border-0 bg-gray-200 dark:bg-gray-700" />
+      )}
+    </>
   );
 };
