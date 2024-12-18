@@ -6,13 +6,15 @@ import {
 } from "@prisma/client";
 import { useState } from "react";
 import { Controller, useForm, type SubmitHandler } from "react-hook-form";
+import { FormItem } from "~/components/generic/FormItem";
+import { Input } from "~/components/generic/Input";
 import { MultiCheckboxSelect } from "~/components/generic/MultiCheckboxSelect";
 import { getSelectItemsFromProfileSelectableData } from "~/util";
 import { api } from "~/utils/api";
 
-type Inputs = {
+export type Inputs = {
   familyName: string;
-  dateOfBirth: Date;
+  dateOfBirth: string;
   photoUrl: string;
   title: string;
   description: string;
@@ -35,53 +37,143 @@ export const ProfileSetupForm = () => {
     formState: { errors },
   } = useForm<Inputs>();
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data, "molam?");
+
+  console.log(errors);
 
   return (
     /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
     <form onSubmit={handleSubmit(onSubmit)} className="">
       <Controller
+        name="title"
+        control={control}
+        rules={{
+          required: "Задолжително",
+        }}
+        render={({ field }) => (
+          <FormItem label="Title" border error={errors[field.name]?.message}>
+            <Input
+              {...field}
+              onChange={field.onChange}
+              value={field.value ?? ""}
+              placeholder="Поглавје"
+            />
+          </FormItem>
+        )}
+      />
+
+      <Controller
+        name="familyName"
+        control={control}
+        rules={{
+          required: "Задолжително",
+        }}
+        render={({ field }) => (
+          <FormItem
+            label="Family Name"
+            border
+            error={errors[field.name]?.message}
+          >
+            <Input
+              {...field}
+              onChange={field.onChange}
+              value={field.value ?? ""}
+              placeholder="Име на фамилија"
+            />
+          </FormItem>
+        )}
+      />
+
+      <Controller
+        name="dateOfBirth"
+        control={control}
+        rules={{
+          required: "Задолжително",
+        }}
+        render={({ field }) => (
+          <FormItem
+            label="Date of Birth"
+            border
+            error={errors[field.name]?.message}
+          >
+            <Input
+              {...field}
+              type="date"
+              onChange={field.onChange}
+              value={field.value}
+              placeholder="Датум на раѓање"
+            />
+          </FormItem>
+        )}
+      />
+
+      <Controller
         name="profileLanguages"
         control={control}
+        rules={{
+          required: "Задолжително",
+          validate: (val) =>
+            val.length < 1 ? "Одберете барем еден јазик" : undefined,
+        }}
         render={({ field }) => (
-          <MultiCheckboxSelect
-            {...field}
-            onChange={(value) => field.onChange(value)}
-            value={field.value || []}
+          <FormItem
+            error={errors[field.name]?.message}
             label="Languages"
-            options={getSelectItemsFromProfileSelectableData(languages ?? [])}
-          ></MultiCheckboxSelect>
+            border
+          >
+            <MultiCheckboxSelect
+              {...field}
+              onChange={field.onChange}
+              value={field.value || []}
+              options={getSelectItemsFromProfileSelectableData(languages ?? [])}
+            ></MultiCheckboxSelect>
+          </FormItem>
         )}
       />
 
       <Controller
         name="profileDrinks"
+        rules={{
+          required: "Задолжително",
+          validate: (val) =>
+            val.length < 1 ? "Одберете барем еден вид на пијалок" : undefined,
+        }}
         control={control}
         render={({ field }) => (
-          <MultiCheckboxSelect
-            onChange={(value) => field.onChange(value)}
-            value={field.value}
-            label="Drinks"
-            options={getSelectItemsFromProfileSelectableData(drinkTypes ?? [])}
-          ></MultiCheckboxSelect>
+          <FormItem error={errors[field.name]?.message} label="Drinks" border>
+            <MultiCheckboxSelect
+              onChange={field.onChange}
+              value={field.value}
+              options={getSelectItemsFromProfileSelectableData(
+                drinkTypes ?? [],
+              )}
+            ></MultiCheckboxSelect>
+          </FormItem>
         )}
       />
 
       <Controller
         name="profileFoodTypes"
+        rules={{
+          required: "Задолжително",
+          validate: (val) =>
+            val.length < 1 ? "Одберете барем еден вид на храна" : undefined,
+        }}
         control={control}
         render={({ field }) => (
-          <MultiCheckboxSelect
-            onChange={(value) => field.onChange(value)}
-            value={field.value}
-            label="Foods"
-            options={getSelectItemsFromProfileSelectableData(foodTypes ?? [])}
-          ></MultiCheckboxSelect>
+          <FormItem error={errors[field.name]?.message} label="Foods">
+            <MultiCheckboxSelect
+              onChange={field.onChange}
+              value={field.value}
+              options={getSelectItemsFromProfileSelectableData(foodTypes ?? [])}
+            ></MultiCheckboxSelect>
+          </FormItem>
         )}
       />
 
       <div className="flex items-center justify-center">
         <input
+          disabled={Object.keys(errors).length > 0}
           type="submit"
           className="cursor-pointer rounded bg-primary-800 px-5 py-2 text-white"
         />

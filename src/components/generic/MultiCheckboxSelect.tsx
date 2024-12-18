@@ -9,15 +9,12 @@ interface MultiCheckboxSelectProps<T> {
   options: CheckboxSelectItem<T>[];
   value?: T[];
   border?: boolean;
-  label?: string;
   onChange: (value: T[]) => void;
 }
 
 export const MultiCheckboxSelect = <T extends object>({
   options,
-  label,
   value,
-  border = true,
   onChange,
 }: MultiCheckboxSelectProps<T>) => {
   // Helper function to compare objects
@@ -38,29 +35,20 @@ export const MultiCheckboxSelect = <T extends object>({
   };
 
   return (
-    <>
-      <div className="flex gap-x-10">
-        {label && <div className="w-32 text-right">{label}</div>}
-        <ul style={{ listStyleType: "none" }} className="space-y-2">
-          {options.map((option) => (
-            <li key={`${option.label}`}>
-              <input
-                id={`${option.label}`}
-                type="checkbox"
-                checked={isSelected(option.value)}
-                onChange={() => handleChange(option.value)}
-              />
-              <label htmlFor={`${option.label}`} className="ml-1">
-                {option.label}
-              </label>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {border && (
-        <hr className="my-8 h-px border-0 bg-gray-200 dark:bg-gray-700" />
-      )}
-    </>
+    <ul style={{ listStyleType: "none" }} className="space-y-2">
+      {options.map((option) => (
+        <li key={`${option.label}`}>
+          <input
+            id={`${option.label}`}
+            type="checkbox"
+            checked={isSelected(option.value)}
+            onChange={() => handleChange(option.value)}
+          />
+          <label htmlFor={`${option.label}`} className="ml-1">
+            {option.label}
+          </label>
+        </li>
+      ))}
+    </ul>
   );
 };

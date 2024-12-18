@@ -1,6 +1,8 @@
 import { type Drink, type FoodType, type Language } from "@prisma/client";
 import { getImageProps } from "next/image";
+import { type FieldErrors } from "react-hook-form";
 import { type CheckboxSelectItem } from "~/components/generic/MultiCheckboxSelect";
+import { type Inputs } from "~/components/profile/ProfileSetupForm";
 
 export const getBackgroundImageStyle = ({
   alt,
