@@ -1,14 +1,14 @@
-import { Select } from "@headlessui/react";
 import {
   type FoodType,
   type ProfileDrink,
   type ProfileLangugage,
 } from "@prisma/client";
-import { useState } from "react";
 import { Controller, useForm, type SubmitHandler } from "react-hook-form";
+import { Checkbox } from "~/components/generic/Checkbox";
 import { FormItem } from "~/components/generic/FormItem";
 import { Input } from "~/components/generic/Input";
 import { MultiCheckboxSelect } from "~/components/generic/MultiCheckboxSelect";
+import { TextArea } from "~/components/generic/TextArea";
 import { getSelectItemsFromProfileSelectableData } from "~/util";
 import { api } from "~/utils/api";
 
@@ -23,7 +23,6 @@ export type Inputs = {
   profileLanguages: ProfileLangugage[];
   profileDrinks: ProfileDrink[];
   profileFoodTypes: FoodType[];
-  exampleRequired: string;
 };
 
 export const ProfileSetupForm = () => {
@@ -85,6 +84,69 @@ export const ProfileSetupForm = () => {
       />
 
       <Controller
+        name="description"
+        control={control}
+        rules={{
+          required: "Задолжително",
+        }}
+        render={({ field }) => (
+          <FormItem
+            label="Description"
+            border
+            error={errors[field.name]?.message}
+          >
+            <TextArea
+              {...field}
+              onChange={field.onChange}
+              value={field.value ?? ""}
+              placeholder="Опис"
+            />
+          </FormItem>
+        )}
+      />
+
+      <Controller
+        name="maximumPeople"
+        control={control}
+        rules={{
+          required: "Задолжително",
+        }}
+        render={({ field }) => (
+          <FormItem
+            label="Maximum People"
+            border
+            error={errors[field.name]?.message}
+          >
+            <Input
+              {...field}
+              onChange={field.onChange}
+              type="number"
+              value={field.value ?? ""}
+              placeholder="Максимален број на луѓе"
+            />
+          </FormItem>
+        )}
+      />
+
+      <Controller
+        name="isSmoking"
+        control={control}
+        render={({ field }) => (
+          <FormItem
+            label="Is smoking?"
+            border
+            error={errors[field.name]?.message}
+          >
+            <Checkbox
+              {...field}
+              onChange={field.onChange}
+              value={field.value ?? false}
+            />
+          </FormItem>
+        )}
+      />
+
+      <Controller
         name="dateOfBirth"
         control={control}
         rules={{
@@ -103,6 +165,27 @@ export const ProfileSetupForm = () => {
               value={field.value}
               placeholder="Датум на раѓање"
             />
+          </FormItem>
+        )}
+      />
+
+      <Controller
+        name="profileDrinks"
+        rules={{
+          required: "Задолжително",
+          validate: (val) =>
+            val.length < 1 ? "Одберете барем еден вид на пијалок" : undefined,
+        }}
+        control={control}
+        render={({ field }) => (
+          <FormItem error={errors[field.name]?.message} label="Drinks" border>
+            <MultiCheckboxSelect
+              onChange={field.onChange}
+              value={field.value}
+              options={getSelectItemsFromProfileSelectableData(
+                drinkTypes ?? [],
+              )}
+            ></MultiCheckboxSelect>
           </FormItem>
         )}
       />
