@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE `Profile` MODIFY `status` ENUM('PENDING', 'APPROVED', 'REJECTED') NOT NULL DEFAULT 'PENDING',
+    MODIFY `rejectedInfo` VARCHAR(191) NULL;

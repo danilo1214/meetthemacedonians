@@ -105,8 +105,8 @@ model Profile {
     photoUrl         String
     title            String
     description      String
-    status           ProfileStatus
-    rejectedInfo     String
+    status           ProfileStatus      @default(PENDING)
+    rejectedInfo     String?
     maximumPeople    Int
     isSmoking        Boolean
     neighbourhood    String

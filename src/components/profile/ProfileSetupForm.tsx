@@ -38,8 +38,6 @@ export const ProfileSetupForm = () => {
 
   const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data, "molam?");
 
-  console.log(errors);
-
   return (
     /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
     <form onSubmit={handleSubmit(onSubmit)} className="">
@@ -254,11 +252,11 @@ export const ProfileSetupForm = () => {
         )}
       />
 
-      <div className="flex items-center justify-center">
+      <div className="my-10 flex items-center justify-center">
         <input
           disabled={Object.keys(errors).length > 0}
           type="submit"
-          className="cursor-pointer rounded bg-primary-800 px-5 py-2 text-white"
+          className="w-64 cursor-pointer rounded bg-primary-600 px-5 py-2 text-white"
         />
       </div>
     </form>

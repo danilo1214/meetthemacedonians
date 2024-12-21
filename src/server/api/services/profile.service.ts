@@ -3,7 +3,9 @@ import {
   type Drink,
   type Profile,
   type FoodType,
+  type Prisma,
 } from "@prisma/client";
+import type * as zod from "zod";
 import { type Context } from "~/server/api/trpc";
 import { db } from "~/server/db";
 
@@ -12,6 +14,15 @@ export const getProfile = (ctx: Context): Promise<Profile | null> => {
     where: {
       createdById: ctx.session.user.id,
     },
+  });
+};
+
+export const createProfile = (
+  ctx: Context,
+  input: Prisma.ProfileCreateArgs["data"],
+): Promise<Profile> => {
+  return db.profile.create({
+    data: input,
   });
 };
 
