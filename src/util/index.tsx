@@ -1,6 +1,7 @@
 import { type Drink, type FoodType, type Language } from "@prisma/client";
 import { getImageProps } from "next/image";
 import { type FieldErrors } from "react-hook-form";
+import { toast } from "react-toastify";
 import { type CheckboxSelectItem } from "~/components/generic/MultiCheckboxSelect";
 import { type Inputs } from "~/components/profile/ProfileSetupForm";
 
@@ -44,4 +45,10 @@ export const getSelectItemsFromProfileSelectableData = (
   arr: Language[] | FoodType[] | Drink[],
 ): CheckboxSelectItem<object>[] => {
   return arr.map((i) => ({ label: i.mkName, value: i }));
+};
+
+export const toastError = (err: unknown) => {
+  if (err instanceof Error) {
+    toast(err.message, { type: "error" });
+  }
 };

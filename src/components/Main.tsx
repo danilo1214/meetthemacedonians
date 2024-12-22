@@ -3,6 +3,7 @@ import { GeistSans } from "geist/font/sans";
 import { type NextComponentType, type NextPageContext } from "next";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { ToastContainer } from "react-toastify";
 import Navbar from "~/components/navigation/NavBar";
 
 export const Main = ({
@@ -15,7 +16,7 @@ export const Main = ({
 
   if (session.status === "loading") {
     return (
-      <div className="bg-primary-600 flex h-[100vh] w-full content-center items-center justify-center">
+      <div className="flex h-[100vh] w-full content-center items-center justify-center bg-primary-600">
         <Image
           loading="lazy"
           alt="logo"
@@ -31,6 +32,8 @@ export const Main = ({
   return (
     <>
       <Navbar className={GeistSans.className} />
+      <ToastContainer />
+
       <main className={GeistSans.className}>
         <Component {...pageProps} />
       </main>

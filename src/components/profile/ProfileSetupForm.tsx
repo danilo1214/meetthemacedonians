@@ -1,15 +1,13 @@
-import {
-  type FoodType,
-  type ProfileDrink,
-  type ProfileLangugage,
-} from "@prisma/client";
+import { type Drink, type Language, type FoodType } from "@prisma/client";
+import { useEffect } from "react";
 import { Controller, useForm, type SubmitHandler } from "react-hook-form";
+import { toast } from "react-toastify";
 import { Checkbox } from "~/components/generic/Checkbox";
 import { FormItem } from "~/components/generic/FormItem";
 import { Input } from "~/components/generic/Input";
 import { MultiCheckboxSelect } from "~/components/generic/MultiCheckboxSelect";
 import { TextArea } from "~/components/generic/TextArea";
-import { getSelectItemsFromProfileSelectableData } from "~/util";
+import { getSelectItemsFromProfileSelectableData, toastError } from "~/util";
 import { api } from "~/utils/api";
 
 export type Inputs = {
@@ -17,15 +15,24 @@ export type Inputs = {
   dateOfBirth: string;
   photoUrl: string;
   title: string;
+  neighbourhood: string;
   description: string;
   maximumPeople: number;
   isSmoking: boolean;
-  profileLanguages: ProfileLangugage[];
-  profileDrinks: ProfileDrink[];
+  profileLanguages: Language[];
+  profileDrinks: Drink[];
   profileFoodTypes: FoodType[];
 };
 
 export const ProfileSetupForm = () => {
+  const { mutateAsync: createProfile } =
+    api.profile.createProfile.useMutation();
+
+  const { mutateAsync: updateProfile } =
+    api.profile.updateProfile.useMutation();
+
+  const { data: profile } = api.profile.getProfile.useQuery();
+
   const { data: foodTypes } = api.profile.getFoodTypes.useQuery();
   const { data: languages } = api.profile.getLanguages.useQuery();
   const { data: drinkTypes } = api.profile.getDrinkTypes.useQuery();
@@ -33,10 +40,47 @@ export const ProfileSetupForm = () => {
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<Inputs>();
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data, "molam?");
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    try {
+      if (profile?.id) {
+        await updateProfile({
+          id: profile.id,
+          data: {
+            ...data,
+            maximumPeople: Number(data.maximumPeople),
+            dateOfBirth: new Date(data.dateOfBirth),
+          },
+        });
+      } else {
+        await createProfile({
+          ...data,
+          maximumPeople: Number(data.maximumPeople),
+          photoUrl: "",
+          dateOfBirth: new Date(data.dateOfBirth),
+        });
+      }
+
+      toast("successful");
+    } catch (err) {
+      toastError(err);
+    }
+  };
+
+  useEffect(() => {
+    reset({
+      ...profile,
+      profileDrinks: profile?.profileDrinks?.map((pd) => pd.drink),
+      profileFoodTypes: profile?.profileFoodTypes?.map((pf) => pf.foodType),
+      profileLanguages: profile?.profileLanguages?.map((pl) => pl.language),
+      dateOfBirth: profile?.dateOfBirth
+        ? profile.dateOfBirth.toString()
+        : undefined,
+    });
+  }, [profile, reset]);
 
   return (
     /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
@@ -76,6 +120,24 @@ export const ProfileSetupForm = () => {
               onChange={field.onChange}
               value={field.value ?? ""}
               placeholder="Име на фамилија"
+            />
+          </FormItem>
+        )}
+      />
+
+      <Controller
+        name="neighbourhood"
+        control={control}
+        rules={{
+          required: "Задолжително",
+        }}
+        render={({ field }) => (
+          <FormItem label="Title" border error={errors[field.name]?.message}>
+            <Input
+              {...field}
+              onChange={field.onChange}
+              value={field.value ?? ""}
+              placeholder="Населба"
             />
           </FormItem>
         )}
