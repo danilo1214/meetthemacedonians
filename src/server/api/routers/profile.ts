@@ -42,13 +42,6 @@ export const createProfileValidator = z.object({
   ),
 });
 
-type RelationInput = { id: string };
-type ProcessedRelations = {
-  toConnect: RelationInput[];
-  toDisconnect: { id: string }[];
-  toCreate: RelationInput[];
-};
-
 export const updateProfileValidator = z.object({
   id: z.number(),
   data: z.object({

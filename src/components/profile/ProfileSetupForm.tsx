@@ -16,6 +16,7 @@ export type Inputs = {
   photoUrl: string;
   title: string;
   neighbourhood: string;
+  file: File;
   description: string;
   maximumPeople: number;
   isSmoking: boolean;
@@ -40,6 +41,7 @@ export const ProfileSetupForm = () => {
   const {
     control,
     handleSubmit,
+    register,
     reset,
     formState: { errors },
   } = useForm<Inputs>();
@@ -85,6 +87,14 @@ export const ProfileSetupForm = () => {
   return (
     /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
     <form onSubmit={handleSubmit(onSubmit)} className="">
+      <FormItem label="Title" border error={errors.file?.message}>
+        <input
+          {...register("file", { required: "Required" })}
+          name="file"
+          type="file"
+        />
+      </FormItem>
+
       <Controller
         name="title"
         control={control}

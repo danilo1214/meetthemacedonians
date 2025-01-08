@@ -1,5 +1,5 @@
 interface InputProps {
-  value: string | number;
+  value?: string | number;
   placeholder: string;
   onChange: (value: string) => void;
   type?: string;
