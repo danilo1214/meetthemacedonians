@@ -2,6 +2,7 @@ import { type Drink, type Language, type FoodType } from "@prisma/client";
 import { useEffect } from "react";
 import { Controller, useForm, type SubmitHandler } from "react-hook-form";
 import { toast } from "react-toastify";
+import { upload } from "@vercel/blob/client";
 import { Checkbox } from "~/components/generic/Checkbox";
 import { FormItem } from "~/components/generic/FormItem";
 import { Input } from "~/components/generic/Input";
@@ -16,7 +17,7 @@ export type Inputs = {
   photoUrl: string;
   title: string;
   neighbourhood: string;
-  file: File;
+  files: File[];
   description: string;
   maximumPeople: number;
   isSmoking: boolean;
@@ -43,11 +44,26 @@ export const ProfileSetupForm = () => {
     handleSubmit,
     register,
     reset,
+    watch,
     formState: { errors },
   } = useForm<Inputs>();
 
+  const photoUrl = watch("photoUrl");
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
+      const { files } = data;
+      if (files && files.length > 0 && files[0]) {
+        const file = files[0];
+        console.log(file);
+        const blob = await upload(file.name, file, {
+          access: "public",
+          handleUploadUrl: "/api/upload",
+        });
+        console.log(blob);
+        data.photoUrl = blob.downloadUrl;
+      }
+
       if (profile?.id) {
         await updateProfile({
           id: profile.id,
@@ -87,13 +103,17 @@ export const ProfileSetupForm = () => {
   return (
     /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
     <form onSubmit={handleSubmit(onSubmit)} className="">
-      <FormItem label="Title" border error={errors.file?.message}>
-        <input
-          {...register("file", { required: "Required" })}
-          name="file"
-          type="file"
-        />
-      </FormItem>
+      {photoUrl ? (
+        <div>{photoUrl}</div>
+      ) : (
+        <FormItem label="Title" border error={errors.files?.message}>
+          <input
+            {...register("files", { required: "Required" })}
+            name="file"
+            type="file"
+          />
+        </FormItem>
+      )}
 
       <Controller
         name="title"
