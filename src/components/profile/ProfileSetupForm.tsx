@@ -10,6 +10,7 @@ import { MultiCheckboxSelect } from "~/components/generic/MultiCheckboxSelect";
 import { TextArea } from "~/components/generic/TextArea";
 import { getSelectItemsFromProfileSelectableData, toastError } from "~/util";
 import { api } from "~/utils/api";
+import { FileInput } from "~/components/generic/FileInput";
 
 export type Inputs = {
   familyName: string;
@@ -42,9 +43,9 @@ export const ProfileSetupForm = () => {
   const {
     control,
     handleSubmit,
-    register,
     reset,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<Inputs>();
 
@@ -103,17 +104,26 @@ export const ProfileSetupForm = () => {
   return (
     /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
     <form onSubmit={handleSubmit(onSubmit)} className="">
-      {photoUrl ? (
-        <div>{photoUrl}</div>
-      ) : (
-        <FormItem label="Title" border error={errors.files?.message}>
-          <input
-            {...register("files", { required: "Required" })}
-            name="file"
-            type="file"
-          />
-        </FormItem>
-      )}
+      <Controller
+        name="files"
+        control={control}
+        rules={{
+          required: "Задолжително",
+        }}
+        render={({ field }) => (
+          <FormItem label="File" border error={errors[field.name]?.message}>
+            <FileInput
+              {...field}
+              onClear={() => {
+                setValue("photoUrl", "");
+              }}
+              photoUrl={photoUrl}
+              onChange={field.onChange}
+              placeholder="File"
+            />
+          </FormItem>
+        )}
+      />
 
       <Controller
         name="title"
