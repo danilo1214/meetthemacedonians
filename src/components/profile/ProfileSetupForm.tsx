@@ -108,7 +108,11 @@ export const ProfileSetupForm = () => {
         name="files"
         control={control}
         rules={{
-          required: "Задолжително",
+          validate: {
+            required: (value) => {
+              if (!value && !photoUrl) return "Задолжително";
+            },
+          },
         }}
         render={({ field }) => (
           <FormItem label="File" border error={errors[field.name]?.message}>
