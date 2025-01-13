@@ -7,7 +7,6 @@ import {
   getFoodTypes,
   getLanguages,
   getProfile,
-  updateProfile,
 } from "~/server/api/services/profile.service";
 
 import {
@@ -40,6 +39,12 @@ export const createProfileValidator = z.object({
       id: z.number(), // Referencing existing FoodType IDs
     }),
   ),
+  address: z.object({
+    street: z.string(),
+    city: z.string(),
+    streetNumber: z.string(),
+    postalCode: z.string(),
+  }),
 });
 
 export const updateProfileValidator = z.object({
@@ -74,6 +79,12 @@ export const updateProfileValidator = z.object({
         }),
       )
       .optional(),
+    address: z.object({
+      street: z.string().optional(),
+      city: z.string().optional(),
+      streetNumber: z.string().optional(),
+      postalCode: z.string().optional(),
+    }),
   }),
 });
 
@@ -98,6 +109,16 @@ export const profileRouter = createTRPCRouter({
           create: input.profileFoodTypes.map((food) => ({
             foodType: { connect: { id: food.id } },
           })),
+        },
+        address: {
+          create: {
+            ...input.address,
+            state: "",
+            country: "",
+            latitude: 0,
+            longitude: 0,
+            formattedAddress: "",
+          },
         },
       });
     }),
@@ -213,6 +234,16 @@ export const profileRouter = createTRPCRouter({
               profileId: id,
               foodTypeId,
             })),
+          },
+          address: {
+            update: {
+              ...input.data.address,
+              state: "",
+              country: "",
+              latitude: 0,
+              longitude: 0,
+              formattedAddress: "",
+            },
           },
         },
       });

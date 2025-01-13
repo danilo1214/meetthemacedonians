@@ -4,9 +4,6 @@ import {
   type Profile,
   type FoodType,
   type Prisma,
-  type ProfileLangugage,
-  type ProfileFoodType,
-  type ProfileDrink,
 } from "@prisma/client";
 import type * as zod from "zod";
 import { type Context } from "~/server/api/trpc";
@@ -14,6 +11,7 @@ import { db } from "~/server/db";
 
 const profileIncludeOptions = {
   include: {
+    address: true,
     profileDrinks: {
       include: {
         drink: true,

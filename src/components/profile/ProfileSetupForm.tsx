@@ -28,6 +28,10 @@ export type Inputs = {
   profileLanguages: Language[];
   profileDrinks: Drink[];
   profileFoodTypes: FoodType[];
+  city: string;
+  street: string;
+  streetNumber: string;
+  postalCode: string;
 };
 
 const steps = [
@@ -85,8 +89,8 @@ export const ProfileSetupForm = () => {
 
     if (!output) return;
 
-    if (currentStep < steps.length - 1) {
-      if (currentStep === steps.length - 2) {
+    if (currentStep < steps.length) {
+      if (currentStep === steps.length - 1) {
         await handleSubmit(onSubmit)();
       }
       setPreviousStep(currentStep);
@@ -122,6 +126,12 @@ export const ProfileSetupForm = () => {
           id: profile.id,
           data: {
             ...data,
+            address: {
+              city: data.city,
+              street: data.street,
+              streetNumber: data.streetNumber,
+              postalCode: data.postalCode,
+            },
             maximumPeople: Number(data.maximumPeople),
             dateOfBirth: new Date(data.dateOfBirth),
           },
@@ -129,6 +139,12 @@ export const ProfileSetupForm = () => {
       } else {
         await createProfile({
           ...data,
+          address: {
+            city: data.city,
+            street: data.street,
+            streetNumber: data.streetNumber,
+            postalCode: data.postalCode,
+          },
           maximumPeople: Number(data.maximumPeople),
           photoUrl: "",
           dateOfBirth: new Date(data.dateOfBirth),
@@ -142,6 +158,8 @@ export const ProfileSetupForm = () => {
   };
 
   useEffect(() => {
+    const address = profile?.address;
+
     reset({
       ...profile,
       profileDrinks: profile?.profileDrinks?.map((pd) => pd.drink),
@@ -150,6 +168,10 @@ export const ProfileSetupForm = () => {
       dateOfBirth: profile?.dateOfBirth
         ? profile.dateOfBirth.toString()
         : undefined,
+      city: address?.city,
+      postalCode: address?.postalCode,
+      street: address?.street,
+      streetNumber: address?.streetNumber,
     });
   }, [profile, reset]);
 
@@ -430,6 +452,102 @@ export const ProfileSetupForm = () => {
             />
           </FormMotionDiv>
         )}
+
+        {currentStep === 2 && (
+          <FormMotionDiv
+            delta={delta}
+            description="Податоци потребни за туристот да ве најде"
+            title="Адреса"
+          >
+            <Controller
+              name="street"
+              control={control}
+              rules={{
+                required: "Задолжително",
+              }}
+              render={({ field }) => (
+                <FormItem
+                  label="Улица"
+                  border
+                  error={errors[field.name]?.message}
+                >
+                  <Input
+                    {...field}
+                    onChange={field.onChange}
+                    value={field.value ?? ""}
+                    placeholder="Улица"
+                  />
+                </FormItem>
+              )}
+            />
+
+            <Controller
+              name="streetNumber"
+              control={control}
+              rules={{
+                required: "Задолжително",
+              }}
+              render={({ field }) => (
+                <FormItem
+                  label="Број"
+                  border
+                  error={errors[field.name]?.message}
+                >
+                  <Input
+                    {...field}
+                    onChange={field.onChange}
+                    value={field.value ?? ""}
+                    placeholder="Број"
+                  />
+                </FormItem>
+              )}
+            />
+
+            <Controller
+              name="city"
+              control={control}
+              rules={{
+                required: "Задолжително",
+              }}
+              render={({ field }) => (
+                <FormItem
+                  label="Град"
+                  border
+                  error={errors[field.name]?.message}
+                >
+                  <Input
+                    {...field}
+                    onChange={field.onChange}
+                    value={field.value ?? ""}
+                    placeholder="Град"
+                  />
+                </FormItem>
+              )}
+            />
+
+            <Controller
+              name="postalCode"
+              control={control}
+              rules={{
+                required: "Задолжително",
+              }}
+              render={({ field }) => (
+                <FormItem
+                  label="Поштенски број"
+                  border
+                  error={errors[field.name]?.message}
+                >
+                  <Input
+                    {...field}
+                    onChange={field.onChange}
+                    value={field.value ?? ""}
+                    placeholder="Поштенски број"
+                  />
+                </FormItem>
+              )}
+            />
+          </FormMotionDiv>
+        )}
       </form>
 
       <div className="my-8 px-10 pt-5">
@@ -445,7 +563,7 @@ export const ProfileSetupForm = () => {
             className="bg-primary-500 px-8 py-2 text-center text-lg text-white shadow-xl hover:bg-primary-400"
             label="Следно"
             onClick={next}
-            disabled={currentStep === steps.length - 1}
+            disabled={currentStep === steps.length}
           />
         </div>
       </div>
