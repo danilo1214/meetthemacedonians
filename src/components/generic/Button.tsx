@@ -14,7 +14,10 @@ export const Button = ({
 }) => {
   return (
     <button
-      className={classNames("rounded px-5 py-2", className)}
+      className={classNames(
+        "rounded px-5 py-2 disabled:bg-slate-200",
+        className,
+      )}
       disabled={disabled}
       {...rest}
       onClick={onClick}

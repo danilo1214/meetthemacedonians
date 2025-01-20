@@ -14,13 +14,14 @@ import { FileInput } from "~/components/generic/FileInput";
 import { FormMotionDiv } from "~/components/generic/FormMotionDiv";
 import { Steps } from "~/components/generic/Steps";
 import { Button } from "~/components/generic/Button";
+import { ProfileComplete } from "~/components/profile/ProfileComplete";
+import { ProfileCard } from "~/components/profile/ProfileCard";
 
 export type Inputs = {
   familyName: string;
   dateOfBirth: string;
   photoUrl: string;
   title: string;
-  neighbourhood: string;
   files: File[];
   description: string;
   maximumPeople: number;
@@ -51,7 +52,12 @@ const steps = [
       "profileFoodTypes",
     ],
   },
-  { id: "3", name: "Адреса", fields: [] },
+  {
+    id: "3",
+    name: "Адреса",
+    fields: ["city", "street", "streetNumber", "postalCode"],
+  },
+  { id: "4", name: "Профил испратен во проверка", fields: [] },
 ];
 
 export const ProfileSetupForm = () => {
@@ -90,7 +96,7 @@ export const ProfileSetupForm = () => {
     if (!output) return;
 
     if (currentStep < steps.length) {
-      if (currentStep === steps.length - 1) {
+      if (currentStep === steps.length - 2) {
         await handleSubmit(onSubmit)();
       }
       setPreviousStep(currentStep);
@@ -146,7 +152,6 @@ export const ProfileSetupForm = () => {
             postalCode: data.postalCode,
           },
           maximumPeople: Number(data.maximumPeople),
-          photoUrl: "",
           dateOfBirth: new Date(data.dateOfBirth),
         });
       }
@@ -178,6 +183,8 @@ export const ProfileSetupForm = () => {
   return (
     <section>
       <Steps currentStep={currentStep} steps={steps} />
+
+      {profile && <ProfileCard profile={profile} />}
 
       <form onSubmit={handleSubmit(onSubmit)} className="">
         {currentStep === 0 && (
@@ -254,28 +261,6 @@ export const ProfileSetupForm = () => {
                     onChange={field.onChange}
                     value={field.value ?? ""}
                     placeholder="Име на фамилија"
-                  />
-                </FormItem>
-              )}
-            />
-
-            <Controller
-              name="neighbourhood"
-              control={control}
-              rules={{
-                required: "Задолжително",
-              }}
-              render={({ field }) => (
-                <FormItem
-                  label="Title"
-                  border
-                  error={errors[field.name]?.message}
-                >
-                  <Input
-                    {...field}
-                    onChange={field.onChange}
-                    value={field.value ?? ""}
-                    placeholder="Населба"
                   />
                 </FormItem>
               )}
@@ -548,22 +533,24 @@ export const ProfileSetupForm = () => {
             />
           </FormMotionDiv>
         )}
+
+        {currentStep === 3 && <ProfileComplete />}
       </form>
 
       <div className="my-8 px-10 pt-5">
         <div className="flex justify-between">
           <Button
-            className="bg-primary-500 px-8 py-2 text-center text-lg text-white shadow-xl hover:bg-primary-400"
+            className="bg-accent-500 px-8 py-2 text-center text-lg text-white shadow-xl hover:bg-accent-400"
             label="Назад"
             onClick={prev}
             disabled={currentStep === 0}
           />
 
           <Button
-            className="bg-primary-500 px-8 py-2 text-center text-lg text-white shadow-xl hover:bg-primary-400"
+            className="bg-accent-500 px-8 py-2 text-center text-lg text-white shadow-xl hover:bg-accent-400"
             label="Следно"
             onClick={next}
-            disabled={currentStep === steps.length}
+            disabled={currentStep === steps.length - 1}
           />
         </div>
       </div>

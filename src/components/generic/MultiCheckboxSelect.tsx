@@ -35,10 +35,14 @@ export const MultiCheckboxSelect = <T extends object>({
   };
 
   return (
-    <ul style={{ listStyleType: "none" }} className="space-y-2">
+    <ul
+      style={{ listStyleType: "none" }}
+      className="grid grid-cols-1 gap-x-10 gap-y-5 lg:grid-cols-3"
+    >
       {options.map((option) => (
         <li key={`${option.label}`}>
           <input
+            className="checked:text-purple-200"
             id={`${option.label}`}
             type="checkbox"
             checked={isSelected(option.value)}

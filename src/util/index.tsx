@@ -1,17 +1,22 @@
-import { type Drink, type FoodType, type Language } from "@prisma/client";
+import {
+  type Address,
+  type Drink,
+  type FoodType,
+  type Language,
+} from "@prisma/client";
 import { getImageProps } from "next/image";
-import { type FieldErrors } from "react-hook-form";
 import { toast } from "react-toastify";
 import { type CheckboxSelectItem } from "~/components/generic/MultiCheckboxSelect";
-import { type Inputs } from "~/components/profile/ProfileSetupForm";
+
+export const formatAddress = (address: Address) => {
+  return `${address.streetNumber} ${address.street}, ${address.city}, ${address.state}, ${address.postalCode}, ${address.country}`;
+};
 
 export const getBackgroundImageStyle = ({
-  alt,
   width,
   height,
   src,
 }: {
-  alt: string;
   width: number;
   height: number;
   src: string;

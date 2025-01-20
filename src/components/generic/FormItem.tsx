@@ -10,7 +10,7 @@ interface FormItemProps {
 export const FormItem = ({ children, label, error, border }: FormItemProps) => {
   return (
     <div>
-      <div className="flex flex-col items-center gap-y-10 py-3 lg:flex-row lg:gap-x-10 lg:py-2">
+      <div className="flex flex-col items-center gap-y-10 py-6 lg:flex-row lg:gap-x-10 lg:py-5">
         {label && (
           <div className="w-64 text-center lg:text-right">
             <div>{label}</div>
@@ -22,7 +22,7 @@ export const FormItem = ({ children, label, error, border }: FormItemProps) => {
       </div>
 
       {border && (
-        <hr className="my-8 h-px border-0 bg-gray-200 dark:bg-gray-700" />
+        <hr className="my-2 h-px border-0 bg-gray-200 dark:bg-gray-700" />
       )}
     </div>
   );
