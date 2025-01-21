@@ -26,16 +26,14 @@ export const getProfiles = async ({
   search,
   ageRange,
   city,
-  maximumPeople,
   date,
+  guests,
 }: {
-  ctx: Context;
   search?: string;
   ageRange?: number[];
-  maximumPeople: number;
-  city: string;
-  date: Date;
-  guests: number;
+  city?: string;
+  date?: Date;
+  guests?: number;
 }): Promise<TPopulatedProfile[]> => {
   const where: {
     AND: Prisma.ProfileWhereInput[];
@@ -52,17 +50,19 @@ export const getProfiles = async ({
       throw new Error("age range should be 2");
     }
 
+    const today = new Date();
+
     where.AND.push({
       dateOfBirth: {
         gte: new Date(
-          date.getFullYear() - endAge,
-          date.getMonth(),
-          date.getDate(),
+          today.getFullYear() - endAge,
+          today.getMonth(),
+          today.getDate(),
         ), // Min age
         lte: new Date(
-          date.getFullYear() - startAge,
-          date.getMonth(),
-          date.getDate(),
+          today.getFullYear() - startAge,
+          today.getMonth(),
+          today.getDate(),
         ), // Max age
       },
     });
@@ -88,10 +88,10 @@ export const getProfiles = async ({
     ];
   }
 
-  if (maximumPeople) {
+  if (guests) {
     where.AND.push({
       maximumPeople: {
-        gte: maximumPeople,
+        gte: guests,
       },
     });
   }

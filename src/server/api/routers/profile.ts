@@ -7,6 +7,7 @@ import {
   getFoodTypes,
   getLanguages,
   getProfile,
+  getProfiles,
 } from "~/server/api/services/profile.service";
 
 import {
@@ -45,6 +46,19 @@ export const createProfileValidator = z.object({
     streetNumber: z.string(),
     postalCode: z.string(),
   }),
+});
+
+export const fetchProfilesValidator = z.object({
+  search: z.string().optional(),
+  city: z.string().optional(),
+  date: z.coerce
+    .date()
+    .refine((data) => data > new Date(), {
+      message: "Start date must be in the future",
+    })
+    .optional(),
+  guests: z.number().optional(),
+  ageRange: z.array(z.number()).length(2),
 });
 
 export const updateProfileValidator = z.object({
@@ -89,6 +103,17 @@ export const updateProfileValidator = z.object({
 });
 
 export const profileRouter = createTRPCRouter({
+  fetchProfiles: publicProcedure
+    .input(fetchProfilesValidator)
+    .query(async ({ ctx, input }) => {
+      return getProfiles({
+        ageRange: input.ageRange,
+        date: input.date,
+        city: input.city,
+        search: input.search,
+        guests: input.guests,
+      });
+    }),
   createProfile: protectedProcedure
     .input(createProfileValidator)
     .mutation(async ({ ctx, input }): Promise<Profile> => {
