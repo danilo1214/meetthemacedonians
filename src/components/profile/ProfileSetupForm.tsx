@@ -184,8 +184,6 @@ export const ProfileSetupForm = () => {
     <section>
       <Steps currentStep={currentStep} steps={steps} />
 
-      {profile && <ProfileCard profile={profile} />}
-
       <form onSubmit={handleSubmit(onSubmit)} className="">
         {currentStep === 0 && (
           <FormMotionDiv

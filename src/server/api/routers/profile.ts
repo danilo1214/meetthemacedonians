@@ -21,7 +21,6 @@ export const createProfileValidator = z.object({
   dateOfBirth: z.date(),
   photoUrl: z.string(),
   title: z.string(),
-  neighbourhood: z.string(),
   description: z.string(),
   maximumPeople: z.number().min(0).max(6),
   isSmoking: z.boolean(),
@@ -58,7 +57,7 @@ export const fetchProfilesValidator = z.object({
     })
     .optional(),
   guests: z.number().optional(),
-  ageRange: z.array(z.number()).length(2),
+  ageRange: z.array(z.number()).length(2).optional(),
 });
 
 export const updateProfileValidator = z.object({
@@ -119,6 +118,7 @@ export const profileRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }): Promise<Profile> => {
       return createProfile(ctx, {
         ...input,
+        neighbourhood: "",
         createdById: ctx.session.user.id,
         profileLanguages: {
           create: input.profileLanguages.map((lang) => ({

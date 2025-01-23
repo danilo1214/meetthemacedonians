@@ -37,10 +37,9 @@ export const getProfiles = async ({
 }): Promise<TPopulatedProfile[]> => {
   const where: {
     AND: Prisma.ProfileWhereInput[];
-    OR: Prisma.ProfileWhereInput[];
+    OR?: Prisma.ProfileWhereInput[];
   } = {
     AND: [{ status: ProfileStatus.APPROVED }],
-    OR: [],
   };
 
   if (ageRange) {
@@ -104,10 +103,10 @@ export const getProfiles = async ({
     });
   }
 
+  console.log(where.AND, "WHERRRR");
+
   const profiles = await db.profile.findMany({
-    where: {
-      ...where,
-    },
+    where: where ?? undefined,
     ...profileIncludeOptions,
   });
 

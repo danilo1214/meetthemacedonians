@@ -1,12 +1,29 @@
-import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
-import Link from "next/link";
+import { useState } from "react";
 import { Hero } from "~/components/landing/Hero";
+import { ProfileList } from "~/components/profile/ProfileList";
+import {
+  ProfileSearchForm,
+  type IProfileSearchForm,
+} from "~/components/profile/ProfileSearchForm";
 import { ProfileSetupForm } from "~/components/profile/ProfileSetupForm";
-
 import { api } from "~/utils/api";
 
 export default function Home() {
+  const [profleSearchData, setProfleSearchData] =
+    useState<IProfileSearchForm | null>(null);
+
+  console.log(profleSearchData);
+
+  const { data: profiles } = api.profile.fetchProfiles.useQuery({
+    search: profleSearchData?.search,
+    guests: Number(profleSearchData?.guests ?? 1),
+    ageRange:
+      profleSearchData?.ageRange?.split("-")?.map((i) => Number(i)) ??
+      undefined,
+    city: profleSearchData?.city,
+  });
+
   return (
     <>
       <Head>
@@ -16,6 +33,8 @@ export default function Home() {
       </Head>
       <main>
         <Hero />
+        <ProfileSearchForm onSubmit={(data) => setProfleSearchData(data)} />
+        {profiles && <ProfileList profiles={profiles} />}
         <ProfileSetupForm />
       </main>
     </>
