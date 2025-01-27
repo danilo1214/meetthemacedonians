@@ -1,5 +1,6 @@
 import { type TPopulatedProfile } from "~/server/api/types";
 import { formatAddress } from "~/util";
+import moment from "moment";
 
 export const ProfileCard = ({ profile }: { profile: TPopulatedProfile }) => {
   return (
@@ -18,8 +19,8 @@ export const ProfileCard = ({ profile }: { profile: TPopulatedProfile }) => {
           <strong>Family Name:</strong> {profile.familyName}
         </p>
         <p>
-          <strong>Date of Birth:</strong>{" "}
-          {(new Date(profile.dateOfBirth), "MMMM dd, yyyy")}
+          <strong>Age</strong>{" "}
+          {moment().diff(moment(profile.dateOfBirth), "years")}
         </p>
         <p>
           <strong>Maximum People:</strong> {profile.maximumPeople}

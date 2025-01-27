@@ -33,7 +33,12 @@ export default function Home() {
       </Head>
       <main>
         <Hero />
-        <ProfileSearchForm onSubmit={(data) => setProfleSearchData(data)} />
+        <ProfileSearchForm
+          onSubmit={(data) => {
+            console.log(data);
+            setProfleSearchData(data);
+          }}
+        />
         {profiles && <ProfileList profiles={profiles} />}
         <ProfileSetupForm />
       </main>

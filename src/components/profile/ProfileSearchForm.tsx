@@ -1,9 +1,11 @@
 import { Controller, useForm } from "react-hook-form";
+import { Input } from "~/components/generic/Input";
+import { Select } from "~/components/generic/Select";
 
 export interface IProfileSearchForm {
   search?: string;
   city?: string;
-  date?: Date;
+  date?: string;
   guests?: number;
   ageRange?: string;
 }
@@ -21,35 +23,52 @@ export const ProfileSearchForm = ({ onSubmit }: ProfileSearchFormProps) => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col items-center gap-4 rounded-lg bg-gray-100 p-4 shadow-sm sm:flex-row"
+      className="items-top mx-2 my-5 flex flex-col justify-center gap-4 rounded-lg p-4 py-2 lg:flex-row"
     >
       {/* Search Bar */}
-      <input
-        type="text"
-        placeholder="Search"
-        {...register("search")}
-        className="w-full rounded border p-2 sm:w-auto"
-      />
+
+      <Controller
+        name="search"
+        control={control}
+        render={({ field }) => (
+          <Input
+            onChange={field.onChange}
+            type="text"
+            placeholder="Search..."
+            value={field.value}
+          />
+        )}
+      ></Controller>
 
       {/* City Select Menu */}
-      <select
-        {...register("city")}
-        className="w-full rounded border p-2 sm:w-auto"
-      >
-        <option value="">Select City</option>
-        <option value="Skopje">Skopje</option>
-        <option value="Ohrid">Ohrid</option>
-      </select>
+      <Controller
+        name="city"
+        control={control}
+        render={({ field }) => (
+          <Select
+            onChange={field.onChange}
+            value={field.value}
+            placeholder="City"
+            options={["Skopje", "Ohrid"]}
+          />
+        )}
+      ></Controller>
 
-      {/* Date Picker */}
-      <input
-        type="date"
-        {...register("date")}
-        className="w-full rounded border p-2 sm:w-auto"
-      />
+      <Controller
+        name="date"
+        control={control}
+        render={({ field }) => (
+          <Input
+            onChange={field.onChange}
+            type="date"
+            placeholder="Date"
+            value={field.value}
+          />
+        )}
+      ></Controller>
 
       {/* Guests Slider */}
-      <div className="flex items-center gap-2">
+      <div className="flex w-full items-center gap-2 lg:w-auto">
         <label htmlFor="guests" className="text-sm font-medium">
           Guests
         </label>
@@ -58,45 +77,31 @@ export const ProfileSearchForm = ({ onSubmit }: ProfileSearchFormProps) => {
           control={control}
           defaultValue={1}
           render={({ field }) => (
-            <input
-              type="range"
-              id="guests"
-              min={1}
-              max={10}
-              {...field}
-              className="w-24"
-            />
+            <input type="range" id="guests" min={1} max={10} {...field} />
           )}
         />
         <span className="text-sm">{guests ?? 1}</span>
       </div>
 
-      {/* Age Range Selection */}
-      <select
-        {...register("ageRange")}
-        className="w-full rounded border p-2 sm:w-auto"
-      >
-        <option value="18-25">18-25</option>
-        <option value="25-40">25-40</option>
-        <option value="40-60">40-60</option>
-        <option value="60+">60+</option>
-      </select>
+      <Controller
+        name="ageRange"
+        control={control}
+        render={({ field }) => (
+          <Select
+            onChange={field.onChange}
+            value={field.value}
+            options={["18-25", "25-40", "40-60", "60-70"]}
+            placeholder="Age"
+          />
+        )}
+      ></Controller>
 
       {/* Submit Button */}
       <button
         type="submit"
-        className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+        className="rounded bg-primary-500 px-4 py-2 text-white hover:bg-primary-600"
       >
         Search
-      </button>
-
-      {/* Reset Button */}
-      <button
-        type="button"
-        onClick={() => reset()}
-        className="rounded bg-gray-300 px-4 py-2 text-gray-800 hover:bg-gray-400"
-      >
-        Reset
       </button>
     </form>
   );
