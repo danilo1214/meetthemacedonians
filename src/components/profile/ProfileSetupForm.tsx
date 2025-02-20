@@ -538,14 +538,14 @@ export const ProfileSetupForm = () => {
       <div className="my-8 px-10 pt-5">
         <div className="flex justify-between">
           <Button
-            className="bg-accent-500 px-8 py-2 text-center text-lg text-white shadow-xl hover:bg-accent-400"
+            className="bg-primary-500 px-8 py-2 text-center text-lg text-white shadow-xl hover:bg-primary-400"
             label="Назад"
             onClick={prev}
             disabled={currentStep === 0}
           />
 
           <Button
-            className="bg-accent-500 px-8 py-2 text-center text-lg text-white shadow-xl hover:bg-accent-400"
+            className="bg-primary-500 px-8 py-2 text-center text-lg text-white shadow-xl hover:bg-primary-400"
             label="Следно"
             onClick={next}
             disabled={currentStep === steps.length - 1}

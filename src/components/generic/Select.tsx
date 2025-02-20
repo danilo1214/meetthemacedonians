@@ -16,7 +16,7 @@ export const Select = ({
     <select
       {...props}
       onChange={(e) => onChange(e.target.value)}
-      className="w-full rounded border p-2 lg:w-auto"
+      className="w-full rounded border lg:w-auto"
       value={value}
     >
       <option value={""} disabled selected>

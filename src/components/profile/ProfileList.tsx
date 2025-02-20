@@ -7,7 +7,7 @@ export const ProfileList = ({
   profiles: TPopulatedProfile[];
 }) => {
   return (
-    <div>
+    <div className="m-10 grid columns-3">
       {profiles.map((profile) => (
         <ProfileCard key={profile.id} profile={profile} />
       ))}

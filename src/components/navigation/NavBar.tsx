@@ -23,7 +23,7 @@ const navigation: NavigationItem[] = [
   { label: "App", link: "/app", protected: true },
   { label: "Account", link: "/account", protected: true },
   { label: "Pricing", link: "/pricing" },
-  { label: "How to Use?", link: "/how-to-use" },
+  { label: "Meet Locals", link: "/search" },
 ];
 
 export interface NavigationItem {

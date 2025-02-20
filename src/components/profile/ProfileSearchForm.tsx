@@ -1,6 +1,10 @@
+"use client";
+
 import { Controller, useForm } from "react-hook-form";
 import { Input } from "~/components/generic/Input";
 import { Select } from "~/components/generic/Select";
+import { Slider } from "~/components/generic/Slider";
+import { useSearchParams } from "next/navigation";
 
 export interface IProfileSearchForm {
   search?: string;
@@ -15,10 +19,20 @@ interface ProfileSearchFormProps {
 }
 
 export const ProfileSearchForm = ({ onSubmit }: ProfileSearchFormProps) => {
-  const { register, handleSubmit, reset, control, watch } =
-    useForm<IProfileSearchForm>();
+  const searchParams = useSearchParams();
 
-  const guests = watch("guests");
+  // Initialize form with query params
+  const { handleSubmit, control, formState } = useForm<IProfileSearchForm>({
+    defaultValues: {
+      search: searchParams.get("search") ?? "",
+      city: searchParams.get("city") ?? "",
+      date: searchParams.get("date") ?? "",
+      guests: searchParams.get("guests")
+        ? Number(searchParams.get("guests"))
+        : 1,
+      ageRange: searchParams.get("ageRange") ?? "",
+    },
+  });
 
   return (
     <form
@@ -26,7 +40,6 @@ export const ProfileSearchForm = ({ onSubmit }: ProfileSearchFormProps) => {
       className="items-top mx-2 my-5 flex flex-col justify-center gap-4 rounded-lg p-4 py-2 lg:flex-row"
     >
       {/* Search Bar */}
-
       <Controller
         name="search"
         control={control}
@@ -38,7 +51,7 @@ export const ProfileSearchForm = ({ onSubmit }: ProfileSearchFormProps) => {
             value={field.value}
           />
         )}
-      ></Controller>
+      />
 
       {/* City Select Menu */}
       <Controller
@@ -52,8 +65,9 @@ export const ProfileSearchForm = ({ onSubmit }: ProfileSearchFormProps) => {
             options={["Skopje", "Ohrid"]}
           />
         )}
-      ></Controller>
+      />
 
+      {/* Date Picker */}
       <Controller
         name="date"
         control={control}
@@ -65,24 +79,18 @@ export const ProfileSearchForm = ({ onSubmit }: ProfileSearchFormProps) => {
             value={field.value}
           />
         )}
-      ></Controller>
+      />
 
       {/* Guests Slider */}
-      <div className="flex w-full items-center gap-2 lg:w-auto">
-        <label htmlFor="guests" className="text-sm font-medium">
-          Guests
-        </label>
-        <Controller
-          name="guests"
-          control={control}
-          defaultValue={1}
-          render={({ field }) => (
-            <input type="range" id="guests" min={1} max={10} {...field} />
-          )}
-        />
-        <span className="text-sm">{guests ?? 1}</span>
-      </div>
+      <Controller
+        name="guests"
+        control={control}
+        render={({ field }) => (
+          <Slider label="Guests" min={1} max={10} {...field} />
+        )}
+      />
 
+      {/* Age Range */}
       <Controller
         name="ageRange"
         control={control}
@@ -94,12 +102,13 @@ export const ProfileSearchForm = ({ onSubmit }: ProfileSearchFormProps) => {
             placeholder="Age"
           />
         )}
-      ></Controller>
+      />
 
       {/* Submit Button */}
       <button
+        disabled={Object.keys(formState.dirtyFields).length === 0}
         type="submit"
-        className="rounded bg-primary-500 px-4 py-2 text-white hover:bg-primary-600"
+        className="rounded bg-primary-500 px-4 py-2 text-white hover:bg-primary-600 disabled:bg-primary-200"
       >
         Search
       </button>
