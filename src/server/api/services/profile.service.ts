@@ -6,6 +6,7 @@ import {
   type Prisma,
   ProfileStatus,
 } from "@prisma/client";
+import moment from "moment";
 import { type Context } from "~/server/api/trpc";
 import {
   profileIncludeOptions,
@@ -103,7 +104,18 @@ export const getProfiles = async ({
     });
   }
 
-  console.log(where.AND, "WHERRRR");
+  if (date) {
+    where.AND.push({
+      reservations: {
+        none: {
+          date: {
+            gte: date,
+            lte: moment(date).add(3, "hours").toDate(),
+          },
+        },
+      },
+    });
+  }
 
   const profiles = await db.profile.findMany({
     where: where ?? undefined,
