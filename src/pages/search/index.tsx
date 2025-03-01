@@ -5,6 +5,7 @@ import {
   type IProfileSearchForm,
   ProfileSearchForm,
 } from "~/components/profile/ProfileSearchForm";
+import { ReservationForm } from "~/components/reservation/ReservationForm";
 import { api } from "~/utils/api";
 
 export default function ProfileSearch() {

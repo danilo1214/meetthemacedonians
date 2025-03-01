@@ -7,6 +7,7 @@ import {
   getFoodTypes,
   getLanguages,
   getProfile,
+  getProfileById,
   getProfiles,
 } from "~/server/api/services/profile.service";
 
@@ -15,6 +16,8 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
+
+export const getProfileByIdValidator = z.number();
 
 export const createProfileValidator = z.object({
   familyName: z.string(),
@@ -274,6 +277,11 @@ export const profileRouter = createTRPCRouter({
       });
     }),
 
+  getProfileById: publicProcedure
+    .input(getProfileByIdValidator)
+    .query(async ({ input }) => {
+      return getProfileById(input);
+    }),
   getProfile: protectedProcedure.query(async ({ ctx }) => {
     const profile = await getProfile(ctx);
     return profile ?? null;

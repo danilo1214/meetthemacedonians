@@ -17,7 +17,7 @@ import { Button } from "~/components/generic/Button";
 import { ProfileComplete } from "~/components/profile/ProfileComplete";
 import { ProfileCard } from "~/components/profile/ProfileCard";
 
-export type Inputs = {
+export type TProfileSetupForm = {
   familyName: string;
   dateOfBirth: string;
   photoUrl: string;
@@ -85,9 +85,9 @@ export const ProfileSetupForm = () => {
     setValue,
     trigger,
     formState: { errors },
-  } = useForm<Inputs>();
+  } = useForm<TProfileSetupForm>();
 
-  type FieldName = keyof Inputs;
+  type FieldName = keyof TProfileSetupForm;
 
   const next = async () => {
     const fields = steps[currentStep]!.fields;
@@ -113,7 +113,7 @@ export const ProfileSetupForm = () => {
 
   const photoUrl = watch("photoUrl");
 
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+  const onSubmit: SubmitHandler<TProfileSetupForm> = async (data) => {
     try {
       const { files } = data;
       if (files && files.length > 0 && files[0]) {

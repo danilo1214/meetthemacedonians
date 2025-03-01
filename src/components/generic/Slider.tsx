@@ -1,7 +1,7 @@
 interface SliderProps {
   value?: number;
   onChange: (value: number) => void;
-  label: string;
+  label?: string;
   min?: number;
   max?: number;
 }
@@ -15,8 +15,8 @@ export const Slider = ({
   ...props
 }: SliderProps) => {
   return (
-    <div className="flex w-full items-center gap-2 lg:w-auto">
-      <label className="text-sm font-medium">{label}</label>
+    <div className="flex items-center gap-2 lg:w-auto">
+      {label && <label className="text-sm font-medium">{label}</label>}
       <input
         type="range"
         min={min}

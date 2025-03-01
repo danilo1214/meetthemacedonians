@@ -1,10 +1,13 @@
 import { type TPopulatedProfile } from "~/server/api/types";
-import { formatAddress } from "~/util";
 import moment from "moment";
+import Link from "next/link";
 
 export const ProfileCard = ({ profile }: { profile: TPopulatedProfile }) => {
   return (
-    <div className="max-w-sm overflow-hidden rounded bg-white p-4 shadow-lg">
+    <Link
+      href={`/profile/${profile.id}`}
+      className="max-w-sm overflow-hidden rounded bg-white p-4 shadow-lg"
+    >
       <img
         className="h-48 w-full object-cover"
         src={profile.photoUrl}
@@ -48,6 +51,6 @@ export const ProfileCard = ({ profile }: { profile: TPopulatedProfile }) => {
           {profile.profileFoodTypes.map((f) => f.foodType.name).join(", ")}
         </div>
       </div>
-    </div>
+    </Link>
   );
 };

@@ -17,7 +17,12 @@ export const reservationRouter = createTRPCRouter({
     .input(createReservationValidator)
     .mutation(async ({ input }) => {
       return createReservation({
-        ...input,
+        firstName: input.firstName,
+        lastName: input.lastName,
+        note: input.note,
+        country: input.country,
+        date: input.date,
+        profileId: input.profileId,
         people: {
           create: input.peopleAges.map((age) => ({ age })),
         },

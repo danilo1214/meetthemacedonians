@@ -14,6 +14,17 @@ import {
 } from "~/server/api/types";
 import { db } from "~/server/db";
 
+export const getProfileById = (
+  id: number,
+): Promise<TPopulatedProfile | null> => {
+  return db.profile.findUnique({
+    where: {
+      id,
+    },
+    ...profileIncludeOptions,
+  });
+};
+
 export const getProfile = (ctx: Context): Promise<TPopulatedProfile | null> => {
   return db.profile.findUnique({
     where: {
