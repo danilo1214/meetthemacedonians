@@ -44,7 +44,7 @@ export default function ProfileSearch() {
           handleSubmit(data);
         }}
       />
-      {profiles && <ProfileList profiles={profiles} />}
+      {profiles && <ProfileList profiles={[...profiles, ...profiles]} />}
     </main>
   );
 }

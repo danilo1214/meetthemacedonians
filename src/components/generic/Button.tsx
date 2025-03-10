@@ -7,10 +7,11 @@ export const Button = ({
   onClick,
   ...rest
 }: {
-  disabled: boolean;
+  disabled?: boolean;
   className: string;
   label: string;
-  onClick: () => void;
+  type?: "submit" | "reset" | "button";
+  onClick?: () => void;
 }) => {
   return (
     <button
@@ -19,8 +20,8 @@ export const Button = ({
         className,
       )}
       disabled={disabled}
-      {...rest}
       onClick={onClick}
+      {...rest}
     >
       {label}
     </button>

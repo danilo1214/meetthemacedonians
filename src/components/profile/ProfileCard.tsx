@@ -1,13 +1,16 @@
 import { type TPopulatedProfile } from "~/server/api/types";
 import moment from "moment";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export const ProfileCard = ({ profile }: { profile: TPopulatedProfile }) => {
+  const router = useRouter();
+  const profileId = Number(router.query.id);
+  console.log(router.pathname);
+  const isAdmin = router.pathname === "/account";
+
   return (
-    <Link
-      href={`/profile/${profile.id}`}
-      className="max-w-sm overflow-hidden rounded bg-white p-4 shadow-lg"
-    >
+    <div className="overflow-hidden rounded bg-white p-4">
       <img
         className="h-48 w-full object-cover"
         src={profile.photoUrl}
@@ -19,6 +22,17 @@ export const ProfileCard = ({ profile }: { profile: TPopulatedProfile }) => {
         </div>
         <p className="text-base text-gray-700">{profile.familyName} family</p>
       </div>
+
+      {!profileId && !isAdmin && (
+        <div className="px-6 py-2">
+          <Link
+            href={`/profile/${profile.id}`}
+            className="rounded bg-primary-600 px-10 py-3 text-white"
+          >
+            View
+          </Link>
+        </div>
+      )}
       <div className="px-6 pb-2 pt-4">
         <p>
           <strong>Description:</strong> {profile.description}
@@ -51,6 +65,6 @@ export const ProfileCard = ({ profile }: { profile: TPopulatedProfile }) => {
           {profile.profileFoodTypes.map((f) => f.foodType.name).join(", ")}
         </div>
       </div>
-    </Link>
+    </div>
   );
 };

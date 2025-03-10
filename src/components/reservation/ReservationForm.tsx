@@ -7,6 +7,7 @@ import {
   type SubmitHandler,
 } from "react-hook-form";
 import { toast } from "react-toastify";
+import { Button } from "~/components/generic/Button";
 import { FormItem } from "~/components/generic/FormItem";
 import { Input } from "~/components/generic/Input";
 import { Slider } from "~/components/generic/Slider";
@@ -72,102 +73,122 @@ export const ReservationForm = ({ profileId }: ReservationFormProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Controller
-        name="firstName"
-        control={control}
-        rules={{ required: "Required" }}
-        render={({ field }) => (
-          <FormItem label="First Name" border error={errors.firstName?.message}>
-            <Input {...field} placeholder="First Name" />
-          </FormItem>
-        )}
-      />
+    <div className="mx-lg flex flex-col items-center border-t-2 border-t-gray-100">
+      <h1 className="my-5 text-lg font-semibold text-gray-900">
+        {" "}
+        Make a reservation
+      </h1>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Controller
+          name="firstName"
+          control={control}
+          rules={{ required: "Required" }}
+          render={({ field }) => (
+            <FormItem
+              label="First Name"
+              border
+              error={errors.firstName?.message}
+            >
+              <Input {...field} placeholder="First Name" />
+            </FormItem>
+          )}
+        />
 
-      <Controller
-        name="lastName"
-        control={control}
-        rules={{ required: "Required" }}
-        render={({ field }) => (
-          <FormItem label="Last Name" border error={errors.lastName?.message}>
-            <Input {...field} placeholder="Last Name" />
-          </FormItem>
-        )}
-      />
+        <Controller
+          name="lastName"
+          control={control}
+          rules={{ required: "Required" }}
+          render={({ field }) => (
+            <FormItem label="Last Name" border error={errors.lastName?.message}>
+              <Input {...field} placeholder="Last Name" />
+            </FormItem>
+          )}
+        />
 
-      <Controller
-        name="date"
-        control={control}
-        rules={{ required: "Required" }}
-        render={({ field }) => (
-          <FormItem label="Date and time" border error={errors.date?.message}>
-            <Input
-              {...field}
-              type="datetime-local"
-              placeholder="Reservation date"
-            />
-          </FormItem>
-        )}
-      />
+        <Controller
+          name="date"
+          control={control}
+          rules={{ required: "Required" }}
+          render={({ field }) => (
+            <FormItem label="Date and time" border error={errors.date?.message}>
+              <Input
+                {...field}
+                type="datetime-local"
+                placeholder="Reservation date"
+              />
+            </FormItem>
+          )}
+        />
 
-      <Controller
-        name="note"
-        control={control}
-        rules={{ required: "Required" }}
-        render={({ field }) => (
-          <FormItem label="Notes" border error={errors.note?.message}>
-            <TextArea {...field} placeholder="Note to the host" />
-          </FormItem>
-        )}
-      />
+        <Controller
+          name="note"
+          control={control}
+          rules={{ required: "Required" }}
+          render={({ field }) => (
+            <FormItem label="Notes" border error={errors.note?.message}>
+              <TextArea {...field} placeholder="Note to the host" />
+            </FormItem>
+          )}
+        />
 
-      <Controller
-        name="country"
-        control={control}
-        rules={{ required: "Required" }}
-        render={({ field }) => (
-          <FormItem label="Country" border error={errors.country?.message}>
-            <Input {...field} placeholder="Country" />
-          </FormItem>
-        )}
-      />
+        <Controller
+          name="country"
+          control={control}
+          rules={{ required: "Required" }}
+          render={({ field }) => (
+            <FormItem label="Country" border error={errors.country?.message}>
+              <Input {...field} placeholder="Country" />
+            </FormItem>
+          )}
+        />
 
-      <FormItem label="Guests" border>
-        <div>
-          <Slider
-            min={1}
-            max={10}
-            value={fields.length}
-            onChange={onGuestChange}
-          />
-
-          {fields.map((field, idx) => (
-            <div key={field.id} className="m-2 flex items-center gap-x-2">
-              <label>Age for guest {idx + 1}</label>
-              <Controller
-                name={`peopleAges.${idx}.age`}
-                control={control}
-                rules={{
-                  required: "Required",
-                  min: { value: 0, message: "Age must be 0 or more" },
-                }}
-                render={({ field }) => (
-                  <Input
-                    type="number"
-                    {...field}
-                    placeholder="Enter age"
-                    onChange={(value) => field.onChange(Number(value))} // Ensure number conversion
-                  />
-                )}
+        <FormItem label="Guests" border>
+          <div className="text-xs">
+            <div className="mb-2 flex w-64 content-center items-center justify-between gap-x-2">
+              <div>Number of guests</div>
+              <Input
+                classNames="w-20"
+                value={fields.length}
+                onChange={(v) => onGuestChange(Number(v))}
+                type="number"
+                placeholder="Country"
               />
             </div>
-          ))}
-        </div>
-      </FormItem>
 
-      <button type="submit" className="mt-4 rounded bg-blue-500 p-2 text-white">
-        Submit Reservation
-      </button>
-    </form>
+            {fields.map((field, idx) => (
+              <div
+                key={field.id}
+                className="flex w-64 items-center justify-between gap-x-2"
+              >
+                <label>Guest {idx + 1} age</label>
+                <Controller
+                  name={`peopleAges.${idx}.age`}
+                  control={control}
+                  rules={{
+                    required: "Required",
+                    min: { value: 0, message: "Age must be 0 or more" },
+                  }}
+                  render={({ field }) => (
+                    <Input
+                      classNames="w-20"
+                      type="number"
+                      {...field}
+                      placeholder="Enter age"
+                      onChange={(value) => field.onChange(Number(value))} // Ensure number conversion
+                    />
+                  )}
+                />
+              </div>
+            ))}
+          </div>
+        </FormItem>
+
+        <Button
+          type="submit"
+          label="Submit Reservation"
+          className="mx-auto my-4 block w-full rounded bg-accent-700 p-2 text-white"
+        />
+      </form>
+    </div>
   );
 };

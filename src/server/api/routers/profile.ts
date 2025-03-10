@@ -1,4 +1,4 @@
-import { type Profile } from "@prisma/client";
+import { ProfileStatus, type Profile } from "@prisma/client";
 
 import { z } from "zod";
 import {
@@ -138,6 +138,7 @@ export const profileRouter = createTRPCRouter({
             foodType: { connect: { id: food.id } },
           })),
         },
+        status: ProfileStatus.PENDING,
         address: {
           create: {
             ...input.address,
@@ -267,7 +268,7 @@ export const profileRouter = createTRPCRouter({
             update: {
               ...input.data.address,
               state: "",
-              country: "",
+              country: "Macedonia",
               latitude: 0,
               longitude: 0,
               formattedAddress: "",

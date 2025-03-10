@@ -37,7 +37,7 @@ export const MultiCheckboxSelect = <T extends object>({
   return (
     <ul
       style={{ listStyleType: "none" }}
-      className="grid grid-cols-1 gap-x-10 gap-y-5 lg:grid-cols-3"
+      className="grid grid-cols-2 gap-x-10 gap-y-5 lg:grid-cols-3"
     >
       {options.map((option) => (
         <li key={`${option.label}`}>

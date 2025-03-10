@@ -8,7 +8,6 @@ import {
 } from "@headlessui/react";
 import classNames from "classnames";
 import { useBreakpoint } from "~/hooks/media";
-import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { UserMenu } from "~/components/navigation/UserMenu";
 import { SignInButton } from "~/components/navigation/SignInButton";
@@ -19,10 +18,9 @@ import { HamburgerOpen } from "~/components/navigation/HamburgerOpen";
 import { GeistSans } from "geist/font/sans";
 
 const navigation: NavigationItem[] = [
-  { label: "Home", link: "/" },
-  { label: "App", link: "/app", protected: true },
+  { label: "Home", link: "/", protected: false },
+  { label: "Dashboard", link: "/dashboard", protected: true },
   { label: "Account", link: "/account", protected: true },
-  { label: "Pricing", link: "/pricing" },
   { label: "Meet Locals", link: "/search" },
 ];
 
@@ -38,7 +36,9 @@ export default function Navbar({ ...props }) {
 
   const isSignedIn = status !== "loading" && !!data?.user;
 
-  const publicRoutes = navigation.filter((n) => !n.protected);
+  const publicRoutes = navigation.filter(
+    (n) => !n.protected && n.protected !== false,
+  );
   const protectedRoutes = navigation.filter((n) => n.protected && isSignedIn);
 
   return (
