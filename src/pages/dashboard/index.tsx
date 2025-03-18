@@ -1,6 +1,5 @@
 import { type GetServerSidePropsContext } from "next";
 import { getServerSession } from "next-auth";
-import Head from "next/head";
 import { toast } from "react-toastify";
 import { ReservationRequest } from "~/components/reservation/ReservationRequest";
 import { authConfig } from "~/server/auth/config";
@@ -9,8 +8,11 @@ import { toastError } from "~/util";
 import { api } from "~/utils/api";
 
 export default function Dashboard() {
-  const { data: reservations } =
-    api.reservation.getReservationRequests.useQuery();
+  const utils = api.useUtils();
+
+  const { data: requests } = api.reservation.getReservationRequests.useQuery();
+  const { data: reservations } = api.reservation.getReservations.useQuery();
+
   const { mutateAsync: acceptReservation } =
     api.reservation.acceptReservation.useMutation();
   const { mutateAsync: declineReservation } =
@@ -19,6 +21,7 @@ export default function Dashboard() {
   const handleAccept = async (reservationId: number) => {
     try {
       await acceptReservation(reservationId);
+      await utils.reservation.invalidate();
       toast("Successfully accepted reservation");
     } catch (err) {
       toastError(err);
@@ -28,6 +31,7 @@ export default function Dashboard() {
   const handleDecline = async (reservationId: number) => {
     try {
       await declineReservation(reservationId);
+      await utils.reservation.invalidate();
       toast("Successfully declined reservation");
     } catch (err) {
       toastError(err);
@@ -35,15 +39,26 @@ export default function Dashboard() {
   };
 
   return (
-    <main>
+    <main className="p-4">
+      <h2 className="text-xl font-semibold">Your requests</h2>
       <div className="flex flex-col gap-y-10">
-        {reservations?.map((reservation) => (
+        {requests?.map((reservation) => (
           <ReservationRequest
             key={reservation.id}
             reservation={reservation}
             onAccept={() => handleAccept(reservation.id)}
             onDecline={() => handleDecline(reservation.id)}
+            showActions
           />
+        ))}
+      </div>
+
+      <h2 className="mt-16 text-xl font-semibold">
+        Your upcoming reservations
+      </h2>
+      <div className="flex flex-col gap-y-10">
+        {reservations?.map((reservation) => (
+          <ReservationRequest key={reservation.id} reservation={reservation} />
         ))}
       </div>
     </main>

@@ -1,5 +1,6 @@
 import { ProfileStatus, type Prisma, type Reservation } from "@prisma/client";
 import moment from "moment";
+import { type TPopulatedReservation } from "~/server/api/types";
 import { db } from "~/server/db";
 
 export const getOverlappingReservation = (
@@ -45,7 +46,7 @@ const validateReservation = async (
 export const getUserReservations = async (
   userId: string,
   status?: ProfileStatus,
-): Promise<Reservation[]> => {
+): Promise<TPopulatedReservation[]> => {
   return await db.reservation.findMany({
     where: {
       profile: {

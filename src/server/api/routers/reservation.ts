@@ -32,7 +32,7 @@ export const reservationRouter = createTRPCRouter({
   getReservationRequests: protectedProcedure.query(async ({ ctx }) => {
     return getUserReservations(ctx.session.user.id, ProfileStatus.PENDING);
   }),
-  getApprovedReservations: protectedProcedure.query(async ({ ctx }) => {
+  getReservations: protectedProcedure.query(async ({ ctx }) => {
     return getUserReservations(ctx.session.user.id, ProfileStatus.APPROVED);
   }),
   createReservation: protectedProcedure

@@ -21,6 +21,16 @@ export const profileIncludeOptions = {
   },
 };
 
+export const reservationIncludeOptions = {
+  include: {
+    people: true,
+  },
+};
+
 export type TPopulatedProfile = Prisma.ProfileGetPayload<
   typeof profileIncludeOptions
+>;
+
+export type TPopulatedReservation = Prisma.ReservationGetPayload<
+  typeof reservationIncludeOptions
 >;
