@@ -1,4 +1,4 @@
-import { ProfileStatus } from "@prisma/client";
+import { ReservationStatus } from "@prisma/client";
 import { z } from "zod";
 import {
   acceptReservation,
@@ -13,6 +13,8 @@ export const createReservationValidator = z.object({
   lastName: z.string(),
   note: z.string(),
   date: z.date(),
+  email: z.string(),
+  phoneNumber: z.string(),
   country: z.string(),
   profileId: z.number(),
   peopleAges: z.array(z.number()),
@@ -27,13 +29,15 @@ export const reservationRouter = createTRPCRouter({
   acceptReservation: protectedProcedure
     .input(z.number())
     .mutation(async ({ input: id, ctx }) => {
-      return acceptReservation(id, ctx.session.user.id);
+      const reservation = await acceptReservation(id, ctx.session.user.id);
+
+      return reservation;
     }),
   getReservationRequests: protectedProcedure.query(async ({ ctx }) => {
-    return getUserReservations(ctx.session.user.id, ProfileStatus.PENDING);
+    return getUserReservations(ctx.session.user.id, ReservationStatus.PENDING);
   }),
   getReservations: protectedProcedure.query(async ({ ctx }) => {
-    return getUserReservations(ctx.session.user.id, ProfileStatus.APPROVED);
+    return getUserReservations(ctx.session.user.id, ReservationStatus.APPROVED);
   }),
   createReservation: protectedProcedure
     .input(createReservationValidator)
@@ -42,6 +46,8 @@ export const reservationRouter = createTRPCRouter({
         firstName: input.firstName,
         lastName: input.lastName,
         note: input.note,
+        email: input.email,
+        phoneNumber: input.phoneNumber,
         country: input.country,
         date: input.date,
         profileId: input.profileId,

@@ -10,7 +10,6 @@ import { toast } from "react-toastify";
 import { Button } from "~/components/generic/Button";
 import { FormItem } from "~/components/generic/FormItem";
 import { Input } from "~/components/generic/Input";
-import { Slider } from "~/components/generic/Slider";
 import { TextArea } from "~/components/generic/TextArea";
 import { toastError } from "~/util";
 import { api } from "~/utils/api";
@@ -19,6 +18,8 @@ export type TReservationForm = {
   firstName: string;
   lastName: string;
   note: string;
+  email: string;
+  phoneNumber: string;
   date: string;
   country: string;
   peopleAges: { age: number }[];
@@ -142,6 +143,32 @@ export const ReservationForm = ({ profileId }: ReservationFormProps) => {
           )}
         />
 
+        <Controller
+          name="email"
+          control={control}
+          rules={{ required: "Required" }}
+          render={({ field }) => (
+            <FormItem label="Email" border error={errors.email?.message}>
+              <Input {...field} placeholder="Email" type="email" />
+            </FormItem>
+          )}
+        />
+
+        <Controller
+          name="phoneNumber"
+          control={control}
+          rules={{ required: "Required" }}
+          render={({ field }) => (
+            <FormItem
+              label="Phone number"
+              border
+              error={errors.phoneNumber?.message}
+            >
+              <Input {...field} placeholder="Phone number" type="tel" />
+            </FormItem>
+          )}
+        />
+
         <FormItem label="Guests" border>
           <div className="text-xs">
             <div className="mb-2 flex w-64 content-center items-center justify-between gap-x-2">
@@ -184,9 +211,10 @@ export const ReservationForm = ({ profileId }: ReservationFormProps) => {
         </FormItem>
 
         <Button
+          disabled={Object.keys(errors).length > 0}
           type="submit"
           label="Submit Reservation"
-          className="mx-auto my-4 block w-full rounded bg-accent-700 p-2 text-white"
+          className="mx-auto my-4 block w-full rounded bg-accent-700 p-2 text-white disabled:bg-accent-100"
         />
       </form>
     </div>

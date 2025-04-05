@@ -40,27 +40,36 @@ export default function Dashboard() {
 
   return (
     <main className="p-4">
-      <h2 className="text-xl font-semibold">Your requests</h2>
-      <div className="flex flex-col gap-y-10">
-        {requests?.map((reservation) => (
-          <ReservationRequest
-            key={reservation.id}
-            reservation={reservation}
-            onAccept={() => handleAccept(reservation.id)}
-            onDecline={() => handleDecline(reservation.id)}
-            showActions
-          />
-        ))}
-      </div>
+      {requests && requests.length > 0 && (
+        <>
+          <h2 className="text-xl font-semibold">Your requests</h2>
+          <div className="mb-16 flex flex-col gap-y-10">
+            {requests?.map((reservation) => (
+              <ReservationRequest
+                key={reservation.id}
+                reservation={reservation}
+                onAccept={() => handleAccept(reservation.id)}
+                onDecline={() => handleDecline(reservation.id)}
+                showActions
+              />
+            ))}
+          </div>
+        </>
+      )}
 
-      <h2 className="mt-16 text-xl font-semibold">
-        Your upcoming reservations
-      </h2>
-      <div className="flex flex-col gap-y-10">
-        {reservations?.map((reservation) => (
-          <ReservationRequest key={reservation.id} reservation={reservation} />
-        ))}
-      </div>
+      {reservations && reservations.length > 0 && (
+        <>
+          <h2 className="text-xl font-semibold">Your upcoming reservations</h2>
+          <div className="flex flex-col gap-y-10">
+            {reservations?.map((reservation) => (
+              <ReservationRequest
+                key={reservation.id}
+                reservation={reservation}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </main>
   );
 }

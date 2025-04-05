@@ -1,5 +1,12 @@
-import { ProfileStatus, type Prisma, type Reservation } from "@prisma/client";
+import {
+  ProfileStatus,
+  ReservationStatus,
+  type Prisma,
+  type Reservation,
+} from "@prisma/client";
 import moment from "moment";
+import { sendReservationPayment } from "~/server/api/services/email.service";
+import { generatePaymentForReservation } from "~/server/api/services/payment.service";
 import { type TPopulatedReservation } from "~/server/api/types";
 import { db } from "~/server/db";
 
@@ -45,7 +52,7 @@ const validateReservation = async (
 
 export const getUserReservations = async (
   userId: string,
-  status?: ProfileStatus,
+  status?: ReservationStatus,
 ): Promise<TPopulatedReservation[]> => {
   return await db.reservation.findMany({
     where: {
@@ -64,14 +71,42 @@ export const getUserReservations = async (
 export const acceptReservation = async (id: number, userId: string) => {
   await validateReservation(id, userId);
 
-  return db.reservation.update({
+  const updatedReservation = await db.reservation.update({
     where: {
       id,
     },
     data: {
-      status: ProfileStatus.APPROVED,
+      status: ReservationStatus.ACCEPTED,
+    },
+    include: {
+      profile: true, // Include profile details if needed
+      people: true, // Include reservation people details
     },
   });
+
+  const paymentResponse =
+    await generatePaymentForReservation(updatedReservation);
+
+  const paymentLink: string | undefined =
+    paymentResponse?.data?.data?.attributes.url;
+  if (!paymentLink) {
+    throw new Error("Error generating payment form.");
+  }
+
+  await db.reservation.update({
+    where: {
+      id,
+    },
+    data: {
+      paymentLink,
+    },
+  });
+
+  if (updatedReservation.email) {
+    void sendReservationPayment(updatedReservation);
+  }
+
+  return updatedReservation;
 };
 
 export const declineReservation = async (id: number, userId: string) => {
