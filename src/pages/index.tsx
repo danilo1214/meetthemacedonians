@@ -1,6 +1,5 @@
 import Head from "next/head";
 import { Hero } from "~/components/landing/Hero";
-import { ProfileSetupForm } from "~/components/profile/ProfileSetupForm";
 
 export default function Home() {
   return (
