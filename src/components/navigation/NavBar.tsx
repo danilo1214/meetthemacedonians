@@ -19,9 +19,8 @@ import { GeistSans } from "geist/font/sans";
 
 const navigation: NavigationItem[] = [
   { label: "Home", link: "/", protected: false },
-  { label: "Dashboard", link: "/dashboard", protected: true },
-  { label: "Account", link: "/account", protected: true },
-  { label: "Meet Locals", link: "/search" },
+  { label: "Резервации", link: "/dashboard", protected: true },
+  { label: "Мој профил", link: "/account", protected: true },
 ];
 
 export interface NavigationItem {
@@ -36,9 +35,6 @@ export default function Navbar({ ...props }) {
 
   const isSignedIn = status !== "loading" && !!data?.user;
 
-  const publicRoutes = navigation.filter(
-    (n) => !n.protected && n.protected !== false,
-  );
   const protectedRoutes = navigation.filter((n) => n.protected && isSignedIn);
 
   return (
@@ -83,18 +79,6 @@ export default function Navbar({ ...props }) {
 
                 <DisclosurePanel className="my-5 flex w-full flex-col flex-wrap text-center lg:hidden">
                   <>
-                    {publicRoutes.map((item, index) => (
-                      <NavBarItemMobile item={item} key={index} />
-                    ))}
-
-                    <div
-                      className={classNames(
-                        isSignedIn &&
-                          "border-t-textPrimary-100 border-t border-opacity-20",
-                        "mx-auto w-[50%]",
-                      )}
-                    ></div>
-
                     {protectedRoutes.map((item, index) => (
                       <NavBarItemMobile item={item} key={index} />
                     ))}
@@ -110,18 +94,6 @@ export default function Navbar({ ...props }) {
         {isLargeScreen && (
           <div className="ml-auto flex items-center justify-between text-center">
             <ul className="flex-1 list-none items-center justify-end pt-6 lg:flex lg:pt-0">
-              {publicRoutes.map((item, index) => (
-                <NavBarItemWeb key={index} item={item} />
-              ))}
-
-              <div
-                className={classNames(
-                  "mx-3 h-[30px]",
-                  isSignedIn &&
-                    "border-r-textPrimary-100 border-r border-opacity-55",
-                )}
-              ></div>
-
               {protectedRoutes.map((item, index) => (
                 <NavBarItemWeb key={index} item={item} />
               ))}

@@ -10,9 +10,9 @@ interface FormItemProps {
 export const FormItem = ({ children, label, error }: FormItemProps) => {
   return (
     <div>
-      <div className="flex flex-col gap-y-4 py-4 lg:flex-row lg:gap-x-10 lg:py-5">
+      <div className="flex flex-col gap-y-4 py-4 lg:flex-row lg:gap-x-6 lg:py-5">
         {label && (
-          <div className="w-64 text-sm text-gray-700 lg:text-right">
+          <div className="w-64 text-sm text-gray-700">
             <div>{label}</div>
             <div className="text-primary-400">{error}</div>
           </div>

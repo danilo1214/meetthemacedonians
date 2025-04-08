@@ -230,6 +230,7 @@ export const profileRouter = createTRPCRouter({
               languageId,
             })),
           },
+          status: ProfileStatus.PENDING,
           profileDrinks: {
             connectOrCreate: profileDrinks.toConnect?.map((drinkId) => ({
               where: {

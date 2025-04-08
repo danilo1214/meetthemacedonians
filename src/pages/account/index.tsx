@@ -20,11 +20,7 @@ export default function Account() {
     setShowProfileForm((pf) => !pf);
   };
 
-  if (!profile) {
-    return null;
-  }
-
-  const isUnderReview = profile.status === ProfileStatus.PENDING;
+  const isUnderReview = profile?.status === ProfileStatus.PENDING;
 
   return (
     <main className="m-5 flex flex-col gap-y-5">
@@ -38,18 +34,20 @@ export default function Account() {
         </div>
       ) : (
         <>
-          <Button
-            label={showProfileForm ? "Назад" : "Промени податоци"}
-            className={classNames(
-              "w-52",
-              !showProfileForm && "bg-primary-400 text-white",
-              showProfileForm &&
-                "border border-primary-400 bg-white text-primary-400",
-            )}
-            onClick={handleCtaClick}
-          />
+          {profile && (
+            <Button
+              label={showProfileForm ? "Назад" : "Промени податоци"}
+              className={classNames(
+                "w-52",
+                !showProfileForm && "bg-primary-400 text-white",
+                showProfileForm &&
+                  "border border-primary-400 bg-white text-primary-400",
+              )}
+              onClick={handleCtaClick}
+            />
+          )}
           <div className="my-5 flex flex-col">
-            {showProfileForm ? (
+            {showProfileForm || !profile ? (
               <ProfileSetupForm />
             ) : (
               <ProfileCard profile={profile} />

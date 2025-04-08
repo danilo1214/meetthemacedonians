@@ -61,6 +61,8 @@ const steps = [
 ];
 
 export const ProfileSetupForm = () => {
+  const utils = api.useUtils();
+
   const [previousStep, setPreviousStep] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
   const delta = currentStep - previousStep;
@@ -156,7 +158,10 @@ export const ProfileSetupForm = () => {
         });
       }
 
-      toast("successful");
+      await utils.reservation.invalidate();
+      await utils.profile.invalidate();
+
+      toast("Успешно внесен профил.");
     } catch (err) {
       toastError(err);
     }

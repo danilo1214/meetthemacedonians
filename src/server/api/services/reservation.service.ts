@@ -71,7 +71,7 @@ export const getUserReservations = async (
 export const acceptReservation = async (id: number, userId: string) => {
   await validateReservation(id, userId);
 
-  const updatedReservation = await db.reservation.update({
+  let updatedReservation = await db.reservation.update({
     where: {
       id,
     },
@@ -93,12 +93,16 @@ export const acceptReservation = async (id: number, userId: string) => {
     throw new Error("Error generating payment form.");
   }
 
-  await db.reservation.update({
+  updatedReservation = await db.reservation.update({
     where: {
       id,
     },
     data: {
       paymentLink,
+    },
+    include: {
+      profile: true, // Include profile details if needed
+      people: true, // Include reservation people details
     },
   });
 

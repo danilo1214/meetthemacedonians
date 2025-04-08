@@ -74,7 +74,7 @@ export const ReservationForm = ({ profileId }: ReservationFormProps) => {
   };
 
   return (
-    <div className="mx-lg flex flex-col items-center border-t-2 border-t-gray-100">
+    <div className="mx-lg flex flex-col items-center border-t-2 border-t-gray-100 px-12 lg:items-start">
       <h1 className="my-5 text-lg font-semibold text-gray-900">
         {" "}
         Make a reservation
@@ -146,7 +146,13 @@ export const ReservationForm = ({ profileId }: ReservationFormProps) => {
         <Controller
           name="email"
           control={control}
-          rules={{ required: "Required" }}
+          rules={{
+            required: "Required",
+            pattern: {
+              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              message: "Please enter a valid email address",
+            },
+          }}
           render={({ field }) => (
             <FormItem label="Email" border error={errors.email?.message}>
               <Input {...field} placeholder="Email" type="email" />
@@ -157,7 +163,14 @@ export const ReservationForm = ({ profileId }: ReservationFormProps) => {
         <Controller
           name="phoneNumber"
           control={control}
-          rules={{ required: "Required" }}
+          rules={{
+            required: "Required",
+            pattern: {
+              value:
+                /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/,
+              message: "Please enter a valid phone number",
+            },
+          }}
           render={({ field }) => (
             <FormItem
               label="Phone number"

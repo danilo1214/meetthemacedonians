@@ -179,14 +179,15 @@ model Session {
 }
 
 model User {
-    id       String    @id @default(cuid())
-    name     String?
-    email    String?   @unique
-    image    String?
-    accounts Account[]
-    sessions Session[]
-    posts    Post[]
-    Profile  Profile?
+    id            String    @id @default(cuid())
+    name          String?
+    emailVerified DateTime?
+    email         String?   @unique
+    image         String?
+    accounts      Account[]
+    sessions      Session[]
+    posts         Post[]
+    Profile       Profile?
 }
 
 model VerificationToken {
