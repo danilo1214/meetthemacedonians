@@ -58,6 +58,9 @@ export async function sendReservationComplete(
       dynamicTemplateData: data,
     };
 
+    console.log("sending mail");
+    console.log(JSON.stringify(msg));
+
     await mail.send(msg);
   } catch (err) {
     console.log(err);
@@ -66,7 +69,6 @@ export async function sendReservationComplete(
 export async function sendReservationPayment(
   reservation: Reservation,
 ): Promise<void> {
-  console.log(reservation.paymentLink);
   try {
     const msg = {
       to: reservation.email,
