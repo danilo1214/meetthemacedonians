@@ -3,6 +3,8 @@ import { type NextApiRequest, type NextApiResponse } from "next";
 import crypto from "crypto";
 import { db } from "~/server/db";
 import { ReservationStatus } from "@prisma/client";
+import { reservationIncludeOptions } from "~/server/api/types";
+import { sendReservationComplete } from "~/server/api/services/email.service";
 
 async function buffer(readable: any) {
   const chunks = [];
@@ -56,14 +58,17 @@ export default async function handler(
       case "order_created":
         const reservationId = Number(event.meta.custom_data.reservation_id);
 
-        await db.reservation.update({
+        const updatedRes = await db.reservation.update({
           where: {
             id: reservationId,
           },
           data: {
             status: ReservationStatus.APPROVED,
           },
+          ...reservationIncludeOptions,
         });
+
+        void sendReservationComplete(updatedRes);
 
         res.status(200).end();
         return;

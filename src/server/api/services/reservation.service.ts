@@ -7,7 +7,11 @@ import {
 import moment from "moment";
 import { sendReservationPayment } from "~/server/api/services/email.service";
 import { generatePaymentForReservation } from "~/server/api/services/payment.service";
-import { type TPopulatedReservation } from "~/server/api/types";
+import {
+  profileIncludeOptions,
+  reservationIncludeOptions,
+  type TPopulatedReservation,
+} from "~/server/api/types";
 import { db } from "~/server/db";
 
 export const getOverlappingReservation = (
@@ -61,10 +65,7 @@ export const getUserReservations = async (
       },
       status,
     },
-    include: {
-      profile: true, // Include profile details if needed
-      people: true, // Include reservation people details
-    },
+    ...reservationIncludeOptions,
   });
 };
 
@@ -78,10 +79,7 @@ export const acceptReservation = async (id: number, userId: string) => {
     data: {
       status: ReservationStatus.ACCEPTED,
     },
-    include: {
-      profile: true, // Include profile details if needed
-      people: true, // Include reservation people details
-    },
+    ...reservationIncludeOptions,
   });
 
   const paymentResponse =
@@ -101,7 +99,7 @@ export const acceptReservation = async (id: number, userId: string) => {
       paymentLink,
     },
     include: {
-      profile: true, // Include profile details if needed
+      profile: profileIncludeOptions, // Include profile details if needed
       people: true, // Include reservation people details
     },
   });
