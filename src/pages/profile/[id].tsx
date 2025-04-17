@@ -15,7 +15,7 @@ export default function ProfileView() {
 
   return (
     <main>
-      <div className="flex w-full content-center items-center justify-center p-10">
+      <div className="flex w-full content-center items-center justify-center p-4 lg:p-10">
         <ProfileCard profile={profile} />
       </div>
       <ReservationForm profileId={profileId} />

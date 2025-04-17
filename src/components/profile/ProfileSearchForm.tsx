@@ -16,9 +16,13 @@ export interface IProfileSearchForm {
 
 interface ProfileSearchFormProps {
   onSubmit: (data: IProfileSearchForm) => void;
+  disabled?: boolean;
 }
 
-export const ProfileSearchForm = ({ onSubmit }: ProfileSearchFormProps) => {
+export const ProfileSearchForm = ({
+  onSubmit,
+  disabled,
+}: ProfileSearchFormProps) => {
   const searchParams = useSearchParams();
 
   // Initialize form with query params
@@ -33,6 +37,8 @@ export const ProfileSearchForm = ({ onSubmit }: ProfileSearchFormProps) => {
       ageRange: searchParams.get("ageRange") ?? "",
     },
   });
+
+  console.log(formState.dirtyFields);
 
   return (
     <form
@@ -106,7 +112,7 @@ export const ProfileSearchForm = ({ onSubmit }: ProfileSearchFormProps) => {
 
       {/* Submit Button */}
       <button
-        disabled={Object.keys(formState.dirtyFields).length === 0}
+        disabled={Object.keys(formState.dirtyFields).length === 0 || disabled}
         type="submit"
         className="rounded bg-primary-500 px-4 py-2 text-white hover:bg-primary-600 disabled:bg-primary-200"
       >

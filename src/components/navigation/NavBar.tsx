@@ -51,7 +51,7 @@ export default function Navbar({ ...props }) {
             <>
               <div className="flex w-full flex-wrap items-center lg:w-auto lg:justify-between">
                 <Link href="/">
-                  <div className="flex items-center space-x-2 text-2xl text-primary-500">
+                  <div className="flex items-center space-x-2 text-lg text-primary-500 lg:text-2xl">
                     Meet the Macedonians
                   </div>
                 </Link>

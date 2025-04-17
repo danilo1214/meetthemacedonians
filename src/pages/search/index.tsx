@@ -5,7 +5,6 @@ import {
   type IProfileSearchForm,
   ProfileSearchForm,
 } from "~/components/profile/ProfileSearchForm";
-import { ReservationForm } from "~/components/reservation/ReservationForm";
 import { api } from "~/utils/api";
 
 export default function ProfileSearch() {
@@ -25,7 +24,8 @@ export default function ProfileSearch() {
   };
 
   // Fetch profiles using query params
-  const { data: profiles } = api.profile.fetchProfiles.useQuery(queryParams);
+  const { data: profiles, isLoading } =
+    api.profile.fetchProfiles.useQuery(queryParams);
 
   const handleSubmit = (data: IProfileSearchForm) => {
     const params = new URLSearchParams();
@@ -40,10 +40,16 @@ export default function ProfileSearch() {
   return (
     <main>
       <ProfileSearchForm
+        disabled={isLoading}
         onSubmit={(data) => {
           handleSubmit(data);
         }}
       />
+      {isLoading && (
+        <div className="my-16 text-center text-lg text-gray-900">
+          Loading...
+        </div>
+      )}
       {profiles && <ProfileList profiles={[...profiles]} />}
     </main>
   );

@@ -1,15 +1,17 @@
 import { ClockIcon } from "@heroicons/react/24/solid";
 import { ProfileStatus } from "@prisma/client";
+import { createServerSideHelpers } from "@trpc/react-query/server";
 import classNames from "classnames";
 import { type GetServerSidePropsContext } from "next";
 import { getServerSession } from "next-auth";
-import Head from "next/head";
 import { useState } from "react";
+import SuperJSON from "superjson";
 import { Button } from "~/components/generic/Button";
 import { ProfileCard } from "~/components/profile/ProfileCard";
 import { ProfileSetupForm } from "~/components/profile/ProfileSetupForm";
+import { appRouter } from "~/server/api/root";
+import { createInnerTRPCContext } from "~/server/api/trpc";
 import { authConfig } from "~/server/auth/config";
-import { helpers } from "~/server/helpers";
 import { api } from "~/utils/api";
 
 export default function Account() {
@@ -61,6 +63,23 @@ export default function Account() {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getServerSession(context.req, context.res, authConfig);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/get-started",
+        permanent: false,
+      },
+    };
+  }
+
+  const helpers = createServerSideHelpers({
+    router: appRouter,
+    ctx: createInnerTRPCContext({ session }),
+    transformer: SuperJSON,
+  });
+
+  await helpers.profile.getProfile.fetch();
 
   return {
     props: {

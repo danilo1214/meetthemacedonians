@@ -74,7 +74,7 @@ export const ReservationForm = ({ profileId }: ReservationFormProps) => {
   };
 
   return (
-    <div className="mx-lg flex flex-col items-center border-t-2 border-t-gray-100 px-12 lg:items-start">
+    <div className="mx-lg flex flex-col border-t-2 border-t-gray-100 px-5 lg:items-start lg:items-center lg:px-12">
       <h1 className="my-5 text-lg font-semibold text-gray-900">
         {" "}
         Make a reservation

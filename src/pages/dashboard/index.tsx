@@ -1,7 +1,11 @@
+import { createServerSideHelpers } from "@trpc/react-query/server";
 import { type GetServerSidePropsContext } from "next";
 import { getServerSession } from "next-auth";
 import { toast } from "react-toastify";
+import SuperJSON from "superjson";
 import { ReservationRequest } from "~/components/reservation/ReservationRequest";
+import { appRouter } from "~/server/api/root";
+import { createInnerTRPCContext } from "~/server/api/trpc";
 import { authConfig } from "~/server/auth/config";
 import { helpers } from "~/server/helpers";
 import { toastError } from "~/util";
@@ -82,6 +86,26 @@ export default function Dashboard() {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getServerSession(context.req, context.res, authConfig);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/get-started",
+        permanent: false,
+      },
+    };
+  }
+
+  const helpers = createServerSideHelpers({
+    router: appRouter,
+    ctx: createInnerTRPCContext({ session }),
+    transformer: SuperJSON,
+  });
+
+  await Promise.all([
+    helpers.reservation.getReservationRequests.fetch(undefined, {}),
+    helpers.reservation.getReservations.fetch(undefined, {}),
+  ]);
 
   return {
     props: {
