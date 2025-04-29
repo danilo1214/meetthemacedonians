@@ -76,6 +76,7 @@ export async function sendReservationPayment(
       subject: mails[EMAIL_TEMPLATES.RESERVATION_PAYMENT].subject,
       templateId: EMAIL_TEMPLATES.RESERVATION_PAYMENT,
       dynamicTemplateData: {
+        first_name: `${reservation.lastName} ${reservation.firstName}`,
         payment_link: reservation.paymentLink,
       },
     };

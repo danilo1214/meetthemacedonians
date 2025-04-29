@@ -27,10 +27,14 @@ export type TReservationForm = {
 
 interface ReservationFormProps {
   profileId: number;
+  onSuccess?: () => void;
 }
 
-export const ReservationForm = ({ profileId }: ReservationFormProps) => {
-  const { mutateAsync: createReservation } =
+export const ReservationForm = ({
+  profileId,
+  onSuccess,
+}: ReservationFormProps) => {
+  const { mutateAsync: createReservation, isPending } =
     api.reservation.createReservation.useMutation();
 
   const {
@@ -43,7 +47,7 @@ export const ReservationForm = ({ profileId }: ReservationFormProps) => {
     },
   });
 
-  const { fields, append, remove, replace } = useFieldArray({
+  const { fields, append, replace } = useFieldArray({
     control,
     name: "peopleAges",
   });
@@ -59,7 +63,6 @@ export const ReservationForm = ({ profileId }: ReservationFormProps) => {
   };
 
   const onSubmit: SubmitHandler<TReservationForm> = async (data) => {
-    console.log(data);
     try {
       await createReservation({
         ...data,
@@ -68,6 +71,10 @@ export const ReservationForm = ({ profileId }: ReservationFormProps) => {
         peopleAges: data.peopleAges.map((p) => p.age), // Convert objects to array of numbers
       });
       toast("Successfully made reservation");
+
+      if (onSuccess) {
+        onSuccess();
+      }
     } catch (err) {
       toastError(err);
     }
@@ -206,7 +213,7 @@ export const ReservationForm = ({ profileId }: ReservationFormProps) => {
                   control={control}
                   rules={{
                     required: "Required",
-                    min: { value: 0, message: "Age must be 0 or more" },
+                    min: { value: 1, message: "Age must be 1 or more" },
                   }}
                   render={({ field }) => (
                     <Input
@@ -224,7 +231,7 @@ export const ReservationForm = ({ profileId }: ReservationFormProps) => {
         </FormItem>
 
         <Button
-          disabled={Object.keys(errors).length > 0}
+          disabled={Object.keys(errors).length > 0 || isPending}
           type="submit"
           label="Submit Reservation"
           className="mx-auto my-4 block w-full rounded bg-accent-700 p-2 text-white disabled:bg-accent-100"

@@ -27,6 +27,7 @@ export default function Dashboard() {
       await acceptReservation(reservationId);
       await utils.reservation.invalidate();
       toast("Successfully accepted reservation");
+      console.log("mmm what?");
     } catch (err) {
       toastError(err);
     }
@@ -45,14 +46,14 @@ export default function Dashboard() {
   return (
     <main className="p-4">
       {requests?.length === 0 && reservations?.length === 0 && (
-        <h2 className="text-xl font-semibold">
+        <h2 className="text-2xl font-semibold">
           Во моментов немате предстоечки резервации
         </h2>
       )}
 
       {requests && requests.length > 0 && (
         <>
-          <h2 className="text-xl font-semibold">Your requests</h2>
+          <h2 className="text-2xl font-semibold">Your requests</h2>
           <div className="mb-16 flex flex-col gap-y-10">
             {requests?.map((reservation) => (
               <ReservationRequest
@@ -69,7 +70,7 @@ export default function Dashboard() {
 
       {reservations && reservations.length > 0 && (
         <>
-          <h2 className="text-xl font-semibold">Your upcoming reservations</h2>
+          <h2 className="text-2xl font-semibold">Your upcoming reservations</h2>
           <div className="flex flex-col">
             {reservations?.map((reservation) => (
               <ReservationRequest
