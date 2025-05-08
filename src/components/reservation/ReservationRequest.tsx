@@ -74,7 +74,7 @@ export const ReservationRequest = ({
           className={`rounded-full px-3 py-1 text-sm font-medium text-white ${
             reservation.status === ProfileStatus.APPROVED
               ? "bg-secondary-500"
-              : "bg-neutral-500"
+              : "bg-accent-500"
           }`}
         >
           {reservation.status}
@@ -99,9 +99,9 @@ export const ReservationRequest = ({
           </div>
         )}
         {showActions && (
-          <div className="mt-4 flex justify-end gap-2">
+          <div className="mt-1 flex justify-end gap-2">
             <button
-              className="rounded-lg border border-primary-500 px-4 py-2 text-primary-500 hover:bg-gray-50"
+              className="rounded-lg border border-neutral-500 px-4 py-2 text-neutral-500 hover:bg-gray-50"
               onClick={() => {
                 setModalState({ isOpen: true, action: "decline" });
               }}
@@ -109,7 +109,7 @@ export const ReservationRequest = ({
               Decline
             </button>
             <button
-              className="rounded-lg bg-primary-500 px-4 py-2 text-white hover:bg-primary-600"
+              className="rounded-lg bg-secondary-500 px-4 py-2 text-white hover:bg-secondary-600"
               onClick={() => {
                 setModalState({ isOpen: true, action: "accept" });
               }}

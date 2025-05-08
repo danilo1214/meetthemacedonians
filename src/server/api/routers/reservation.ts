@@ -6,7 +6,11 @@ import {
   declineReservation,
   getUserReservations,
 } from "~/server/api/services/reservation.service";
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 
 export const createReservationValidator = z.object({
   firstName: z.string(),
@@ -39,7 +43,7 @@ export const reservationRouter = createTRPCRouter({
   getReservations: protectedProcedure.query(async ({ ctx }) => {
     return getUserReservations(ctx.session.user.id, ReservationStatus.APPROVED);
   }),
-  createReservation: protectedProcedure
+  createReservation: publicProcedure
     .input(createReservationValidator)
     .mutation(async ({ input }) => {
       return createReservation({

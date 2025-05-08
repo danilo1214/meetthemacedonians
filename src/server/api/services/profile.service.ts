@@ -66,12 +66,12 @@ export const getProfiles = async ({
     where.AND.push({
       dateOfBirth: {
         gte: new Date(
-          today.getFullYear() - endAge,
+          today.getFullYear() - endAge - 1,
           today.getMonth(),
           today.getDate(),
         ), // Min age
         lte: new Date(
-          today.getFullYear() - startAge,
+          today.getFullYear() - startAge + 1,
           today.getMonth(),
           today.getDate(),
         ), // Max age

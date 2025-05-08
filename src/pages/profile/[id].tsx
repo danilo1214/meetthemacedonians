@@ -45,7 +45,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getServerSession(context.req, context.res, authConfig);
   const id = Number(context.params?.id);
 
-  if (!session || !id) {
+  if (!id) {
     return {
       redirect: {
         destination: "/get-started",

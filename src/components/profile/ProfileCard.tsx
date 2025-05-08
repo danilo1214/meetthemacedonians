@@ -17,7 +17,7 @@ export const ProfileCard = ({ profile }: { profile: TPopulatedProfile }) => {
         alt={`${profile.familyName}'s photo`}
       />
       <div className="py-4">
-        <div className="text-md mb-1 font-bold text-accent-700">
+        <div className="text-md mb-1 font-bold text-neutral-800">
           {profile.title}
         </div>
         <p className="text-sm text-gray-700">{profile.familyName} family</p>
