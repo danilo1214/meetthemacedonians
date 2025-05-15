@@ -16,6 +16,7 @@ import { NavBarItemMobile } from "~/components/navigation/NavBarItemMobile";
 import { HamburgerClosed } from "~/components/navigation/HamburgerClosed";
 import { HamburgerOpen } from "~/components/navigation/HamburgerOpen";
 import { GeistSans } from "geist/font/sans";
+import Image from "next/image";
 
 const navigation: NavigationItem[] = [
   { label: "Home", link: "/", protected: false },
@@ -51,8 +52,14 @@ export default function Navbar({ ...props }) {
             <>
               <div className="flex w-full flex-wrap items-center lg:w-auto lg:justify-between">
                 <Link href="/">
-                  <div className="flex items-center space-x-2 text-lg text-primary-500 lg:text-2xl">
-                    Meet the Macedonians
+                  <div className="flex items-center space-x-2 text-2xl font-medium text-primary-700/75">
+                    <Image
+                      loading="lazy"
+                      alt="logo"
+                      width={250}
+                      height={250}
+                      src="/logo.png"
+                    />
                   </div>
                 </Link>
 
