@@ -4,6 +4,7 @@ import { type NextComponentType, type NextPageContext } from "next";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { ToastContainer } from "react-toastify";
+import { Footer } from "~/components/generic/Footer";
 import Navbar from "~/components/navigation/NavBar";
 
 export const Main = ({
@@ -37,6 +38,8 @@ export const Main = ({
       <main className={GeistSans.className}>
         <Component {...pageProps} />
       </main>
+
+      <Footer />
     </>
   );
 };
