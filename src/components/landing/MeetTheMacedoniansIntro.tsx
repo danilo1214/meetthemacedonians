@@ -3,31 +3,29 @@ import React from "react";
 
 export const MeetTheMacedoniansIntro = () => {
   return (
-    <section className="my-5 bg-white px-6 text-gray-800 md:px-12 lg:px-8">
-      <div className="flex flex-col items-center gap-x-20 lg:flex-row">
-        <div className="mx-auto">
-          <h1 className="mb-6 text-lg font-bold text-primary-600 md:text-xl">
+    <section className="my-10 bg-white px-6 text-gray-800 md:px-12 lg:px-20">
+      <div className="flex flex-col items-center gap-10 lg:flex-row lg:justify-between">
+        <div className="max-w-2xl">
+          <h2 className="mb-6 text-2xl font-bold text-primary-600 md:text-3xl">
             Discover Macedonia Through Dinner
-          </h1>
-          <p className="text-md mb-6 md:text-lg">
+          </h2>
+          <p className="text-md mb-4 md:text-lg">
             Every year, travelers come to Macedonia drawn by its rich history,
             breathtaking landscapes, and warm hospitality. But there’s a deeper
-            way to experience the country— by sharing a home-cooked meal with
-            the people who live here.
+            way to experience the country—by sharing a home-cooked meal with the
+            people who live here.
           </p>
-          <p className="text-md mb-6 md:text-lg">
+          <p className="text-md mb-4 md:text-lg">
             <strong>Meet the Macedonians</strong> invites you into the homes of
             local families for an evening of good food, heartfelt stories, and
-            cultural connection. Our hosts prepare traditional Macedonian dishes
-            and open their doors to curious, open-minded guests looking for more
-            than just sightseeing.
+            cultural connection.
+          </p>
+          <p className="text-md mb-4 md:text-lg">
+            You’ll sit around the table as a guest—sharing laughter, learning
+            about daily life, and discovering what makes Macedonian culture so
+            unique and welcoming.
           </p>
           <p className="text-md mb-6 md:text-lg">
-            You’ll sit around the table, not just as a visitor, but as a
-            guest—sharing laughter, learning about daily life, and discovering
-            what makes Macedonian culture so unique and welcoming.
-          </p>
-          <p className="text-md mb-8 md:text-lg">
             For many, these dinners lead to unforgettable memories—and sometimes
             lasting friendships.
           </p>
@@ -37,10 +35,10 @@ export const MeetTheMacedoniansIntro = () => {
         </div>
         <Image
           loading="lazy"
-          className="flex-1"
-          alt="logo"
+          alt="Macedonian Dinner"
           width={400}
-          height={100}
+          height={300}
+          className="rounded shadow-lg"
           src="/food.jpg"
         />
       </div>

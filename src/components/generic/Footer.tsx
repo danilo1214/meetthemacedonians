@@ -9,62 +9,42 @@ import { GeistSans } from "geist/font/sans";
 
 export const Footer = () => {
   return (
-    <footer className={classNames("bg-gray-900 py-4", GeistSans.className)}>
+    <footer
+      className={classNames("mt-12 bg-gray-900 py-6", GeistSans.className)}
+    >
       <div className="container mx-auto text-center">
-        <h3 className="mt-10 text-lg text-gray-200">Contact Us:</h3>
-        <p className="text-gray-300">Email: help@meetthemacedonians.com</p>
-        <div className="mt-4">
-          <h3 className="text-lg text-gray-200">Follow us on Social Media:</h3>
-          <div className="mt-2 flex justify-center">
-            <div className="mb-4 flex items-center">
-              <a
-                href=""
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-600 hover:underline"
-              >
-                <FontAwesomeIcon
-                  width={20}
-                  height={20}
-                  icon={faTwitter}
-                  className="mr-2 text-blue-500"
-                />
-              </a>
-            </div>
-
-            <div className="mb-4 flex items-center">
-              <a
-                href=""
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-600 hover:underline"
-              >
-                <FontAwesomeIcon
-                  width={20}
-                  height={20}
-                  icon={faInstagram}
-                  className="mr-2 text-pink-500"
-                />
-              </a>
-            </div>
-
-            <div className="mb-4 flex items-center">
-              <a
-                href=""
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-600 hover:underline"
-              >
-                <FontAwesomeIcon
-                  width={20}
-                  height={20}
-                  icon={faTiktok}
-                  className="mr-2 text-white"
-                />
-              </a>
-            </div>
+        <p className="text-lg text-gray-200">Contact Us</p>
+        <p className="text-gray-400">help@meetthemacedonians.com</p>
+        <div className="mt-6">
+          <p className="text-lg text-gray-200">Follow Us</p>
+          <div className="mt-2 flex justify-center gap-6">
+            <a
+              href="#"
+              aria-label="Twitter"
+              className="text-blue-400 hover:text-blue-600"
+            >
+              <FontAwesomeIcon icon={faTwitter} width={20} height={20} />
+            </a>
+            <a
+              href="#"
+              aria-label="Instagram"
+              className="text-pink-500 hover:text-pink-700"
+            >
+              <FontAwesomeIcon icon={faInstagram} width={20} height={20} />
+            </a>
+            <a
+              href="#"
+              aria-label="TikTok"
+              className="text-white hover:text-gray-300"
+            >
+              <FontAwesomeIcon icon={faTiktok} width={20} height={20} />
+            </a>
           </div>
         </div>
+        <p className="mt-6 text-sm text-gray-500">
+          © {new Date().getFullYear()} Meet The Macedonians. All rights
+          reserved.
+        </p>
       </div>
     </footer>
   );

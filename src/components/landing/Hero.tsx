@@ -23,7 +23,7 @@ export const Hero = () => {
           Meet with locals over dinner, learn about their culture and lifestyle.
         </h1>
         <Link
-          className="my-10 rounded bg-primary-600 p-2 text-white shadow-lg"
+          className="my-10 rounded bg-primary-600 px-4 py-2 text-lg text-white shadow-lg"
           href="/search"
         >
           Explore locals

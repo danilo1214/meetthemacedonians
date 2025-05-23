@@ -20,6 +20,7 @@ import Image from "next/image";
 
 const navigation: NavigationItem[] = [
   { label: "Home", link: "/", protected: false },
+  { label: "Find Locals", link: "search", protected: false },
   { label: "Резервации", link: "/dashboard", protected: true },
   { label: "Мој профил", link: "/account", protected: true },
 ];
@@ -37,6 +38,8 @@ export default function Navbar({ ...props }) {
   const isSignedIn = status !== "loading" && !!data?.user;
 
   const protectedRoutes = navigation.filter((n) => n.protected && isSignedIn);
+
+  const publicRoutes = navigation.filter((n) => !n.protected && !isSignedIn);
 
   return (
     <div
@@ -90,6 +93,10 @@ export default function Navbar({ ...props }) {
                       <NavBarItemMobile item={item} key={index} />
                     ))}
 
+                    {publicRoutes.map((item, index) => (
+                      <NavBarItemMobile item={item} key={index} />
+                    ))}
+
                     {!isSignedIn && <SignInButton />}
                   </>
                 </DisclosurePanel>
@@ -102,6 +109,10 @@ export default function Navbar({ ...props }) {
           <div className="ml-auto flex items-center justify-between text-center">
             <ul className="flex-1 list-none items-center justify-end pt-6 lg:flex lg:pt-0">
               {protectedRoutes.map((item, index) => (
+                <NavBarItemWeb key={index} item={item} />
+              ))}
+
+              {publicRoutes.map((item, index) => (
                 <NavBarItemWeb key={index} item={item} />
               ))}
             </ul>

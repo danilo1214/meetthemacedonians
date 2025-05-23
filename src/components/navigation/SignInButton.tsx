@@ -6,7 +6,7 @@ export const SignInButton = () => {
     <Button
       label="Become a host"
       onClick={() => signIn()}
-      className="bg-primary-500 p-2 text-center text-sm text-white shadow-xl hover:bg-primary-400"
+      className="p-2 text-center"
     />
   );
 };
