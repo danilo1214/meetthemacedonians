@@ -39,7 +39,7 @@ export const MeetTheMacedoniansIntro = () => {
           width={400}
           height={300}
           className="rounded shadow-lg"
-          src="/food.jpg"
+          src="/macedonians.jpg"
         />
       </div>
     </section>

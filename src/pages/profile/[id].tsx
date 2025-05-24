@@ -1,6 +1,7 @@
 import { createServerSideHelpers } from "@trpc/react-query/server";
 import { type GetServerSidePropsContext } from "next";
 import { getServerSession } from "next-auth";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import SuperJSON from "superjson";
@@ -25,19 +26,30 @@ export default function ProfileView() {
   }
 
   return (
-    <main>
-      <div className="flex w-full content-center items-center justify-center p-4 lg:p-10">
-        <ProfileCard profile={profile} />
-      </div>
-      {!isSubmitted && (
-        <ReservationForm
-          profileId={profileId}
-          onSuccess={() => setIsSubmitted(true)}
+    <>
+      <Head>
+        <title>Make a reservation at {profile.familyName}</title>
+        <meta
+          name="description"
+          content="Traditional macedonian food with locals"
         />
-      )}
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
 
-      {isSubmitted && <ReservationConfirmation />}
-    </main>
+      <main>
+        <div className="flex w-full content-center items-center justify-center p-4 lg:p-10">
+          <ProfileCard profile={profile} />
+        </div>
+        {!isSubmitted && (
+          <ReservationForm
+            profileId={profileId}
+            onSuccess={() => setIsSubmitted(true)}
+          />
+        )}
+
+        {isSubmitted && <ReservationConfirmation />}
+      </main>
+    </>
   );
 }
 

@@ -43,7 +43,7 @@ export const ProfileSearchForm = ({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="items-top mx-2 my-5 flex flex-col justify-center gap-4 rounded-lg p-4 py-2 lg:flex-row"
+      className="items-top mx-2 my-5 flex flex-col justify-center gap-2 rounded-lg p-4 py-3 lg:flex-row lg:gap-4"
     >
       {/* Search Bar */}
       <Controller

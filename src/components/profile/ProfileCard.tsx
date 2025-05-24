@@ -17,14 +17,18 @@ export const ProfileCard = ({ profile }: { profile: TPopulatedProfile }) => {
         alt={`${profile.familyName}'s photo`}
       />
       <div className="py-4">
+        <p className="text-sm font-semibold text-gray-600">
+          {profile.familyName} family
+        </p>
+
         <div className="text-md mb-1 font-bold text-neutral-800">
           {profile.title}
         </div>
-        <p className="text-sm text-gray-700">{profile.familyName} family</p>
+        <p className="text-md text-black">{profile.description}</p>
       </div>
 
       {!profileId && !isAdmin && (
-        <div className="py-2">
+        <div className="pb-2">
           <Link
             href={`/profile/${profile.id}`}
             className="rounded bg-primary-600 px-10 py-3 text-white"
@@ -33,38 +37,39 @@ export const ProfileCard = ({ profile }: { profile: TPopulatedProfile }) => {
           </Link>
         </div>
       )}
-      <div className="py-2 text-sm">
-        <p>
-          <span className="text-black">Description:</span> {profile.description}
-        </p>
-        <p>
-          <span className="text-black">Age:</span>{" "}
-          {moment().diff(moment(profile.dateOfBirth), "years")}
-        </p>
-        <p>
-          <span className="text-black">Maximum people:</span>{" "}
-          {profile.maximumPeople}
-        </p>
-        <p>
-          <span className="text-black">Smoking Allowed:</span>{" "}
-          {profile.isSmoking ? "Yes" : "No"}
-        </p>
-      </div>
-
-      <div className="py-2">
-        <span className="text-black">Languages:</span>
-        <div>
-          {profile.profileLanguages.map((l) => l.language.name).join(", ")}
+      <div className="text-md py-2">
+        <div className="text-sm">
+          <p>
+            <span className="text-black">Age:</span>{" "}
+            {moment().diff(moment(profile.dateOfBirth), "years")}
+          </p>
+          <p>
+            <span className="text-black">Maximum people:</span>{" "}
+            {profile.maximumPeople}
+          </p>
+          <p>
+            <span className="text-black">Smoking Allowed:</span>{" "}
+            {profile.isSmoking ? "Yes" : "No"}
+          </p>
         </div>
       </div>
-      <div className="py-2">
-        <span className="text-black">Drinks:</span>
-        <div>{profile.profileDrinks.map((d) => d.drink.name).join(", ")}</div>
-      </div>
-      <div className="py-2">
-        <span className="text-black">Food Types:</span>
-        <div>
-          {profile.profileFoodTypes.map((f) => f.foodType.name).join(", ")}
+
+      <div className="text-sm">
+        <div className="py-0.5">
+          <span className="text-black">Languages:</span>
+          <div>
+            {profile.profileLanguages.map((l) => l.language.name).join(", ")}
+          </div>
+        </div>
+        <div className="py-0.5">
+          <span className="text-black">Drinks:</span>
+          <div>{profile.profileDrinks.map((d) => d.drink.name).join(", ")}</div>
+        </div>
+        <div className="py-0.5">
+          <span className="text-black">Food Types:</span>
+          <div>
+            {profile.profileFoodTypes.map((f) => f.foodType.name).join(", ")}
+          </div>
         </div>
       </div>
     </div>
