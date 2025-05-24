@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { ToastContainer } from "react-toastify";
 import { Footer } from "~/components/generic/Footer";
+import Loader from "~/components/generic/Loader";
 import Navbar from "~/components/navigation/NavBar";
 
 export const Main = ({
@@ -33,9 +34,10 @@ export const Main = ({
   return (
     <>
       <Navbar className={GeistSans.className} />
+      <Loader />
       <ToastContainer />
 
-      <main className={GeistSans.className}>
+      <main className={classNames(GeistSans.className, "min-h-[60vh]")}>
         <Component {...pageProps} />
       </main>
 

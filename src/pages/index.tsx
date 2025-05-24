@@ -1,9 +1,25 @@
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { Hero } from "~/components/landing/Hero";
 import { MeetTheMacedoniansIntro } from "~/components/landing/MeetTheMacedoniansIntro";
-import { ProfileSearchForm } from "~/components/profile/ProfileSearchForm";
+import {
+  type IProfileSearchForm,
+  ProfileSearchForm,
+} from "~/components/profile/ProfileSearchForm";
 
 export default function Home() {
+  const router = useRouter();
+
+  const handleSubmit = (data: IProfileSearchForm) => {
+    const params = new URLSearchParams();
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (value) params.set(key, String(value));
+    });
+
+    void router.push(`/search?${params.toString()}`);
+  };
+
   return (
     <>
       <Head>
@@ -13,11 +29,7 @@ export default function Home() {
       </Head>
       <main className="flex flex-col">
         <Hero />
-        <ProfileSearchForm
-          onSubmit={(data) => {
-            console.log(data);
-          }}
-        />
+        <ProfileSearchForm onSubmit={handleSubmit} />
         <MeetTheMacedoniansIntro />
       </main>
     </>
