@@ -22,7 +22,7 @@ export const Input = ({
       value={value}
       onChange={(e) => onChange(e.target.value)}
       className={classnames(
-        "rounded border-gray-300 bg-gray-50 p-2 text-sm lg:p-2.5 dark:border-gray-600",
+        "rounded border-gray-300 bg-gray-50 p-2 text-lg text-sm lg:p-2.5 dark:border-gray-600",
         classNames,
       )}
       placeholder={placeholder}
