@@ -3,3 +3,12 @@
 @tailwind utilities;
 
 
+input[type="tel"],
+input[type="text"],
+input[type="date"],
+input[type="email"],
+input[type="number"],
+input[type="assword"],
+textarea {
+  font-size: 16px;
+}
