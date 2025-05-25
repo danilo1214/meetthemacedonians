@@ -81,8 +81,8 @@ export const ReservationForm = ({
   };
 
   return (
-    <div className="mx-lg flex flex-col border-t-2 border-t-gray-100 px-5 lg:items-start lg:items-center lg:px-12">
-      <h1 className="my-5 text-lg font-semibold text-gray-900">
+    <div className="mx-lg flex flex-col border-t-2 border-t-gray-100 px-5 lg:items-center lg:px-12">
+      <h1 className="mt-3 text-lg font-semibold text-gray-900 lg:my-5">
         {" "}
         Make a reservation
       </h1>
@@ -234,7 +234,7 @@ export const ReservationForm = ({
           disabled={Object.keys(errors).length > 0 || isPending}
           type="submit"
           label="Submit Reservation"
-          className="mx-auto my-4 block w-full rounded bg-accent-700 p-2 text-white disabled:bg-accent-100"
+          className="mx-auto my-4 block w-full rounded bg-primary-600 p-2 text-white disabled:bg-primary-200"
         />
       </form>
     </div>

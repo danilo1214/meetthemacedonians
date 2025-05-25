@@ -45,20 +45,6 @@ export const ProfileSearchForm = ({
       onSubmit={handleSubmit(onSubmit)}
       className="items-top mx-2 my-5 flex flex-col justify-center gap-2 rounded-lg p-4 py-3 lg:flex-row lg:gap-4"
     >
-      {/* Search Bar */}
-      <Controller
-        name="search"
-        control={control}
-        render={({ field }) => (
-          <Input
-            onChange={field.onChange}
-            type="text"
-            placeholder="Search..."
-            value={field.value}
-          />
-        )}
-      />
-
       {/* City Select Menu */}
       <Controller
         name="city"
@@ -114,7 +100,7 @@ export const ProfileSearchForm = ({
       <button
         disabled={Object.keys(formState.dirtyFields).length === 0 || disabled}
         type="submit"
-        className="rounded bg-primary-500 px-4 py-2 text-white hover:bg-primary-600 disabled:bg-primary-200"
+        className="rounded bg-primary-600 px-4 py-2 text-white hover:bg-primary-500 disabled:bg-primary-200"
       >
         Search
       </button>

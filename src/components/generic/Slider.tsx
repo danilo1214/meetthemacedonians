@@ -15,10 +15,11 @@ export const Slider = ({
   ...props
 }: SliderProps) => {
   return (
-    <div className="flex items-center gap-2 lg:w-auto">
+    <div className="flex w-full items-center gap-2 lg:w-auto">
       {label && <label className="text-sm font-medium">{label}</label>}
       <input
         type="range"
+        className="w-full"
         min={min}
         max={max}
         value={value}

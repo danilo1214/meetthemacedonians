@@ -10,18 +10,18 @@ export const ProfileCard = ({ profile }: { profile: TPopulatedProfile }) => {
   const isAdmin = router.pathname === "/account";
 
   return (
-    <div className="overflow-hidden rounded bg-white p-2 text-gray-600 lg:p-4">
+    <div className="overflow-hidden rounded bg-white p-2 text-gray-600 lg:p-2.5">
       <img
         className="h-48 w-full object-cover"
         src={profile.photoUrl}
         alt={`${profile.familyName}'s photo`}
       />
-      <div className="py-4">
+      <div className="py-2 lg:py-2.5">
         <p className="text-sm font-semibold text-gray-600">
           {profile.familyName} family
         </p>
 
-        <div className="text-md mb-1 font-bold text-neutral-800">
+        <div className="text-md mb-0.5 font-bold text-neutral-800">
           {profile.title}
         </div>
         <p className="text-md text-black">{profile.description}</p>
@@ -31,13 +31,13 @@ export const ProfileCard = ({ profile }: { profile: TPopulatedProfile }) => {
         <div className="pb-2">
           <Link
             href={`/profile/${profile.id}`}
-            className="rounded bg-primary-600 px-10 py-3 text-white"
+            className="rounded bg-primary-600 px-8 py-2 text-white lg:px-10 lg:py-2.5"
           >
             View
           </Link>
         </div>
       )}
-      <div className="text-md py-2">
+      <div className="text-md">
         <div className="text-sm">
           <p>
             <span className="text-black">Age:</span>{" "}
