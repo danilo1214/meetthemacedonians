@@ -6,7 +6,7 @@ export const MeetTheMacedoniansIntro = () => {
     <section className="my-10 bg-white px-6 text-gray-800 md:px-12 lg:px-20">
       <div className="flex flex-col items-center gap-10 lg:flex-row lg:justify-between">
         <div className="max-w-2xl">
-          <h2 className="mb-6 text-2xl font-bold text-primary-600 md:text-3xl">
+          <h2 className="mb-6 text-xl font-bold text-primary-600 md:text-3xl">
             Discover Macedonia Through Dinner
           </h2>
           <p className="text-md mb-4 md:text-lg">

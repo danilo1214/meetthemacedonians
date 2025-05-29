@@ -1,5 +1,6 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { FoodSection } from "~/components/landing/FoodSection";
 import { Hero } from "~/components/landing/Hero";
 import { MeetTheMacedoniansIntro } from "~/components/landing/MeetTheMacedoniansIntro";
 import {
@@ -33,6 +34,7 @@ export default function Home() {
       <main className="flex flex-col">
         <Hero />
         <ProfileSearchForm onSubmit={handleSubmit} />
+        <FoodSection />
         <MeetTheMacedoniansIntro />
       </main>
     </>
