@@ -12,7 +12,7 @@ const cards: ContentCardProps[] = [
   {
     title: "Sarma",
     content:
-      "Cabbage rolls stuffed with minced meat and rice, slow-cooked in a tomato-based sauce. A hearty winter comfort food.",
+      "Cabbage rolls stuffed with minced meat and rice, slow-cooked in a tomato-based sauce.",
     image: "/sarma.jpg",
   },
   {
@@ -43,7 +43,7 @@ const cards: ContentCardProps[] = [
 
 export const FoodSection = () => {
   return (
-    <div className="my-10 px-6 lg:px-20">
+    <div className="mb-10 mt-5 px-6 lg:px-20">
       <h2 className="mb-6 text-xl font-bold text-primary-600 md:text-3xl">
         What is Macedonia&apos;s food like?
       </h2>{" "}

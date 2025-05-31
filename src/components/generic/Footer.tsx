@@ -9,39 +9,41 @@ import { GeistSans } from "geist/font/sans";
 
 export const Footer = () => {
   return (
-    <footer
-      className={classNames("mt-12 bg-gray-900 py-6", GeistSans.className)}
-    >
-      <div className="container mx-auto text-center">
-        <p className="text-lg text-gray-200">Contact Us</p>
-        <p className="text-gray-400">help@meetthemacedonians.com</p>
-        <div className="mt-6">
-          <p className="text-lg text-gray-200">Follow Us</p>
-          <div className="mt-2 flex justify-center gap-6">
+    <footer className={classNames("bg-gray-50 py-10", GeistSans.className)}>
+      <div className="container mx-auto flex flex-col items-center gap-3 px-4 text-center">
+        <div>
+          <h2 className="font-semibold text-gray-700">Contact Us</h2>
+          <p className="text-gray-900">help@meetthemacedonians.com</p>
+        </div>
+
+        <div>
+          <h2 className="font-semibold text-gray-700">Follow Us</h2>
+          <div className="mt-2 flex gap-6">
             <a
               href="#"
               aria-label="Twitter"
-              className="text-blue-400 hover:text-blue-600"
+              className="text-blue-500 transition hover:text-blue-700"
             >
-              <FontAwesomeIcon icon={faTwitter} width={20} height={20} />
+              <FontAwesomeIcon icon={faTwitter} size="lg" />
             </a>
             <a
               href="#"
               aria-label="Instagram"
-              className="text-pink-500 hover:text-pink-700"
+              className="text-pink-500 transition hover:text-pink-700"
             >
-              <FontAwesomeIcon icon={faInstagram} width={20} height={20} />
+              <FontAwesomeIcon icon={faInstagram} size="lg" />
             </a>
             <a
               href="#"
               aria-label="TikTok"
-              className="text-white hover:text-gray-300"
+              className="text-black transition hover:text-gray-700"
             >
-              <FontAwesomeIcon icon={faTiktok} width={20} height={20} />
+              <FontAwesomeIcon icon={faTiktok} size="lg" />
             </a>
           </div>
         </div>
-        <p className="mt-6 text-sm text-gray-500">
+
+        <p className="text-sm text-gray-500">
           © {new Date().getFullYear()} Meet The Macedonians. All rights
           reserved.
         </p>

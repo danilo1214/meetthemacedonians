@@ -1,5 +1,6 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { BecomeAHost } from "~/components/landing/BecomeAHost";
 import { FoodSection } from "~/components/landing/FoodSection";
 import { Hero } from "~/components/landing/Hero";
 import { MeetTheMacedoniansIntro } from "~/components/landing/MeetTheMacedoniansIntro";
@@ -36,6 +37,7 @@ export default function Home() {
         <ProfileSearchForm onSubmit={handleSubmit} />
         <FoodSection />
         <MeetTheMacedoniansIntro />
+        <BecomeAHost />
       </main>
     </>
   );

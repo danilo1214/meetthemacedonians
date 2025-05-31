@@ -23,12 +23,10 @@ export const MeetTheMacedoniansIntro = () => {
           <p className="text-md mb-4 md:text-lg">
             You’ll sit around the table as a guest—sharing laughter, learning
             about daily life, and discovering what makes Macedonian culture so
-            unique and welcoming.
+            unique and welcoming.For many, these dinners lead to unforgettable
+            memories—and sometimes lasting friendships.
           </p>
-          <p className="text-md mb-6 md:text-lg">
-            For many, these dinners lead to unforgettable memories—and sometimes
-            lasting friendships.
-          </p>
+
           <p className="text-md font-semibold italic text-primary-600">
             Come as a traveler, leave as a friend.
           </p>

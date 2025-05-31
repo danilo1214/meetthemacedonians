@@ -20,7 +20,7 @@ export const ContentCard = ({ title, content, image }: ContentCardProps) => {
           priority
         />
       </div>
-      <div className="space-y-2 p-4">
+      <div className="space-y-2 py-2">
         <h2 className="text-lg font-semibold text-gray-800">{title}</h2>
         <p className="text-gray-600">{content}</p>
       </div>
