@@ -18,12 +18,12 @@ export const Main = ({
 
   if (session.status === "loading") {
     return (
-      <div className="flex h-[100vh] w-full content-center items-center justify-center bg-primary-600">
+      <div className="flex h-[100vh] w-full content-center items-center justify-center">
         <Image
           loading="lazy"
           alt="logo"
-          width={100}
-          height={100}
+          width={400}
+          height={400}
           src="/logo.png"
           className="animate-bounce"
         />
