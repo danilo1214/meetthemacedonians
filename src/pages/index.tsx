@@ -1,5 +1,6 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { Meta } from "~/components/generic/Meta";
 import { BecomeAHost } from "~/components/landing/BecomeAHost";
 import { FoodSection } from "~/components/landing/FoodSection";
 import { Hero } from "~/components/landing/Hero";
@@ -25,12 +26,10 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Meet The Macedonians | Eat with the locals</title>
-        <meta
-          name="description"
-          content="Traditional macedonian food with locals"
+        <Meta
+          title="Meet The Macedonians | Eat with the locals"
+          description="Eat traditional macedonian foods. Discover authentic experiences and dinners with local families."
         />
-        <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex flex-col">
         <Hero />
