@@ -65,12 +65,10 @@ export default function ProfileSearch() {
 
   return (
     <>
-      <Head>
-        <Meta
-          title={`Profiles ${queryParamsString} | MeetTheMacedonians`}
-          description={`Browse Macedonian hosts${queryParamsString}. Discover authentic experiences and dinners with local families.`}
-        />
-      </Head>
+      <Meta
+        title={`Profiles ${queryParamsString} | MeetTheMacedonians`}
+        description={`Browse Macedonian hosts${queryParamsString}. Discover authentic experiences and dinners with local families.`}
+      />
 
       <main>
         <ProfileSearchForm

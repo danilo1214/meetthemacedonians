@@ -25,12 +25,10 @@ export default function Home() {
 
   return (
     <>
-      <Head>
-        <Meta
-          title="Meet The Macedonians | Eat with the locals"
-          description="Eat traditional macedonian foods. Discover authentic experiences and dinners with local families."
-        />
-      </Head>
+      <Meta
+        title="Meet The Macedonians | Eat with the locals"
+        description="Eat traditional macedonian foods. Discover authentic experiences and dinners with local families."
+      />
       <main className="flex flex-col">
         <Hero />
         <ProfileSearchForm onSubmit={handleSubmit} />
