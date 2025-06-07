@@ -16,7 +16,13 @@ export const Main = ({
 }) => {
   const session = useSession();
 
-  if (session.status === "loading") {
+  const isBot =
+    typeof window !== "undefined" &&
+    /bot|crawl|spider|slurp|facebook|twitter|linkedin/i.test(
+      navigator.userAgent,
+    );
+
+  if (session.status === "loading" && !isBot) {
     return (
       <div className="flex h-[100vh] w-full content-center items-center justify-center">
         <Image

@@ -39,3 +39,9 @@ export default function Home() {
     </>
   );
 }
+
+export async function getStaticProps() {
+  return {
+    props: {}, // You can add meta info here if dynamic
+  };
+}
