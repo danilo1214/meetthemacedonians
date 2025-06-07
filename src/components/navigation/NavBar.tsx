@@ -20,7 +20,7 @@ import Image from "next/image";
 
 const navigation: NavigationItem[] = [
   { label: "Home", link: "/", protected: false },
-  { label: "Find Locals", link: "search", protected: false },
+  { label: "Find Locals", link: "/search", protected: false },
   { label: "Резервации", link: "/dashboard", protected: true },
   { label: "Мој профил", link: "/account", protected: true },
 ];
