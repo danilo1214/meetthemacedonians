@@ -1,4 +1,6 @@
-import Head from "next/head";
+import { type GetServerSidePropsContext } from "next";
+import { authConfig } from "~/server/auth/config";
+import { getServerSession } from "next-auth";
 import { useRouter } from "next/router";
 import { Meta } from "~/components/generic/Meta";
 import { BecomeAHost } from "~/components/landing/BecomeAHost";
@@ -40,8 +42,12 @@ export default function Home() {
   );
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await getServerSession(context.req, context.res, authConfig);
+
   return {
-    props: {}, // You can add meta info here if dynamic
+    props: {
+      session,
+    },
   };
 }

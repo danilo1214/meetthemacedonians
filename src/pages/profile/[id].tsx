@@ -5,6 +5,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import SuperJSON from "superjson";
+import { Meta } from "~/components/generic/Meta";
 import { ProfileCard } from "~/components/profile/ProfileCard";
 import { ReservationConfirmation } from "~/components/reservation/ReservationConfirmation";
 import { ReservationForm } from "~/components/reservation/ReservationForm";
@@ -27,14 +28,10 @@ export default function ProfileView() {
 
   return (
     <>
-      <Head>
-        <title>Make a reservation at {profile.familyName}</title>
-        <meta
-          name="description"
-          content="Traditional macedonian food with locals"
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <Meta
+        title={`Make a reservation at ${profile.familyName}`}
+        description="Traditional macedonian food with locals"
+      />
 
       <main>
         <div className="flex w-full content-center items-center justify-center p-4 lg:p-10">
