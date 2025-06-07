@@ -1,5 +1,14 @@
-import Head from "next/head";
+import SuperJSON from "superjson";
+
 import { useSearchParams } from "next/navigation";
+import { createServerSideHelpers } from "@trpc/react-query/server";
+import { type GetServerSidePropsContext } from "next";
+import { getServerSession } from "next-auth";
+
+import { appRouter } from "~/server/api/root";
+import { createInnerTRPCContext } from "~/server/api/trpc";
+import { authConfig } from "~/server/auth/config";
+
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { Meta } from "~/components/generic/Meta";
@@ -86,4 +95,37 @@ export default function ProfileSearch() {
       </main>
     </>
   );
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await getServerSession(context.req, context.res, authConfig);
+
+  const query = context.query;
+  const search = query.search as string | undefined;
+  const guests = query.guests ? Number(query.guests) : undefined;
+  const ageRange = query.ageRange
+    ? (query.ageRange as string).split("-").map(Number)
+    : undefined;
+  const city = query.city as string | undefined;
+  const date = query.date ? new Date(query.date as string) : undefined;
+
+  const helpers = createServerSideHelpers({
+    router: appRouter,
+    ctx: createInnerTRPCContext({ session }),
+    transformer: SuperJSON,
+  });
+
+  await helpers.profile.fetchProfiles.fetch({
+    search,
+    guests,
+    ageRange,
+    city,
+    date,
+  });
+
+  return {
+    props: {
+      trpcState: helpers.dehydrate(),
+    },
+  };
 }

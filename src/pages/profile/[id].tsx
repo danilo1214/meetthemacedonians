@@ -52,14 +52,11 @@ export default function ProfileView() {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getServerSession(context.req, context.res, authConfig);
-  const id = Number(context.params?.id);
 
-  if (!id) {
+  const profileId = Number(context.query.id);
+  if (!profileId || isNaN(profileId)) {
     return {
-      redirect: {
-        destination: "/get-started",
-        permanent: false,
-      },
+      notFound: true,
     };
   }
 
@@ -69,7 +66,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     transformer: SuperJSON,
   });
 
-  await Promise.all([helpers.profile.getProfileById.fetch(id, {})]);
+  await helpers.profile.getProfileById.fetch(profileId);
 
   return {
     props: {
