@@ -4,9 +4,10 @@ import { useRouter } from "next/router";
 interface MetaProps {
   title: string;
   description: string;
+  image?: string;
 }
 
-export const Meta = ({ title, description }: MetaProps) => {
+export const Meta = ({ title, description, image }: MetaProps) => {
   const router = useRouter();
 
   return (
@@ -29,7 +30,7 @@ export const Meta = ({ title, description }: MetaProps) => {
       />
       <meta
         property="og:image"
-        content="https://meetthemacedonians.com/food.jpg"
+        content={image ?? "https://meetthemacedonians.com/food.jpg"}
       />
 
       <link rel="icon" href="/favicon.ico" />
