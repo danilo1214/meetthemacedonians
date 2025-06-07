@@ -70,6 +70,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   return {
     props: {
+      session,
       trpcState: helpers.dehydrate(),
     },
   };
