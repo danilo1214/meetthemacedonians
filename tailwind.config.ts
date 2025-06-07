@@ -5,6 +5,15 @@ export default {
   content: ["./src/**/*.tsx"],
   theme: {
     extend: {
+      keyframes: {
+        loader: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(400%)" },
+        },
+      },
+      animation: {
+        loader: "loader 1.2s linear infinite",
+      },
       colors: {
         primary: {
           50: "#fff2f1",
