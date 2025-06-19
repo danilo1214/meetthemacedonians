@@ -14,6 +14,8 @@ import { TextArea } from "~/components/generic/TextArea";
 import { toastError } from "~/util";
 import { api } from "~/utils/api";
 
+const RESERVATION_PRICE = 15;
+
 export type TReservationForm = {
   firstName: string;
   lastName: string;
@@ -79,6 +81,8 @@ export const ReservationForm = ({
       toastError(err);
     }
   };
+
+  const totalPrice = (fields.length ?? 1) * RESERVATION_PRICE;
 
   return (
     <div className="mx-lg flex flex-col border-t-2 border-t-gray-100 px-5 lg:items-center lg:px-12">
@@ -230,10 +234,20 @@ export const ReservationForm = ({
           </div>
         </FormItem>
 
+        <div className="my-10 border-t border-t-black py-10">
+          <div className="">
+            {fields.length}x Dinner for one person{" "}
+            <span className="font-bold">{RESERVATION_PRICE} EUR</span>
+          </div>
+          <div>
+            Total Price: <span className="font-bold">{totalPrice} EUR</span>{" "}
+          </div>
+        </div>
+
         <Button
           disabled={Object.keys(errors).length > 0 || isPending}
           type="submit"
-          label="Submit Reservation"
+          label={`Submit Reservation (${totalPrice} EUR)`}
           className="mx-auto my-4 block w-full rounded bg-primary-600 p-2 text-white disabled:bg-primary-200"
         />
       </form>
