@@ -12,6 +12,8 @@ import {
   ProfileSearchForm,
 } from "~/components/profile/ProfileSearchForm";
 
+import { ProfileMap } from "~/components/map/ProfileMap";
+
 export default function Home() {
   const router = useRouter();
 
@@ -37,6 +39,7 @@ export default function Home() {
         <FoodSection />
         <MeetTheMacedoniansIntro />
         <BecomeAHost />
+        <ProfileMap/>
       </main>
     </>
   );

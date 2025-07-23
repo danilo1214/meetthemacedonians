@@ -1,6 +1,10 @@
-import { type Drink, type Language, type FoodType } from "@prisma/client";
-import { useEffect, useState } from "react";
-import { Controller, useForm, type SubmitHandler } from "react-hook-form";
+import { useEffect, useRef, useState } from "react";
+import {
+  Controller,
+  FormProvider,
+  useForm,
+  type SubmitHandler,
+} from "react-hook-form";
 import { toast } from "react-toastify";
 import { upload } from "@vercel/blob/client";
 import { Checkbox } from "~/components/generic/Checkbox";
@@ -16,23 +20,18 @@ import { Steps } from "~/components/generic/Steps";
 import { Button } from "~/components/generic/Button";
 import { ProfileComplete } from "~/components/profile/ProfileComplete";
 import { ProfileCard } from "~/components/profile/ProfileCard";
+import { useLoadScript } from "@react-google-maps/api";
+import { env } from "~/env";
+import { GooglePlacesAutocompleteComponent } from "../generic/GooglePlacesAutocomplete";
 
 export type TProfileSetupForm = {
-  familyName: string;
-  dateOfBirth: string;
   photoUrl: string;
   title: string;
   files: File[];
-  description: string;
-  maximumPeople: number;
   isSmoking: boolean;
-  profileLanguages: Language[];
-  profileDrinks: Drink[];
-  profileFoodTypes: FoodType[];
-  city: string;
-  street: string;
-  streetNumber: string;
-  postalCode: string;
+  address: string;
+  lat: number;
+  lng: number;
 };
 
 const steps = [
@@ -41,23 +40,7 @@ const steps = [
     name: "Лични податоци",
     fields: ["files", "title", "familyName", "dateOfBirth", "description"],
   },
-  {
-    id: "2",
-    name: "Информации за гости",
-    fields: [
-      "maximumPeople",
-      "isSmoking",
-      "profileLanguages",
-      "profileDrinks",
-      "profileFoodTypes",
-    ],
-  },
-  {
-    id: "3",
-    name: "Адреса",
-    fields: ["city", "street", "streetNumber", "postalCode"],
-  },
-  { id: "4", name: "Профил испратен во проверка", fields: [] },
+  { id: "2", name: "Профил испратен во проверка", fields: [] },
 ];
 
 export const ProfileSetupForm = () => {
@@ -75,9 +58,7 @@ export const ProfileSetupForm = () => {
 
   const { data: profile } = api.profile.getProfile.useQuery();
 
-  const { data: foodTypes } = api.profile.getFoodTypes.useQuery();
-  const { data: languages } = api.profile.getLanguages.useQuery();
-  const { data: drinkTypes } = api.profile.getDrinkTypes.useQuery();
+  const methods = useForm<TProfileSetupForm>();
 
   const {
     control,
@@ -87,7 +68,7 @@ export const ProfileSetupForm = () => {
     setValue,
     trigger,
     formState: { errors },
-  } = useForm<TProfileSetupForm>();
+  } = methods;
 
   type FieldName = keyof TProfileSetupForm;
 
@@ -125,7 +106,6 @@ export const ProfileSetupForm = () => {
           access: "public",
           handleUploadUrl: "/api/upload",
         });
-        console.log(blob);
         data.photoUrl = blob.downloadUrl;
       }
 
@@ -134,27 +114,11 @@ export const ProfileSetupForm = () => {
           id: profile.id,
           data: {
             ...data,
-            address: {
-              city: data.city,
-              street: data.street,
-              streetNumber: data.streetNumber,
-              postalCode: data.postalCode,
-            },
-            maximumPeople: Number(data.maximumPeople),
-            dateOfBirth: new Date(data.dateOfBirth),
           },
         });
       } else {
         await createProfile({
           ...data,
-          address: {
-            city: data.city,
-            street: data.street,
-            streetNumber: data.streetNumber,
-            postalCode: data.postalCode,
-          },
-          maximumPeople: Number(data.maximumPeople),
-          dateOfBirth: new Date(data.dateOfBirth),
         });
       }
 
@@ -167,21 +131,14 @@ export const ProfileSetupForm = () => {
     }
   };
 
-  useEffect(() => {
-    const address = profile?.address;
+  const inputRef = useRef<HTMLInputElement>(null);
 
+  const address = watch("address");
+  console.log(address);
+
+  useEffect(() => {
     reset({
       ...profile,
-      profileDrinks: profile?.profileDrinks?.map((pd) => pd.drink),
-      profileFoodTypes: profile?.profileFoodTypes?.map((pf) => pf.foodType),
-      profileLanguages: profile?.profileLanguages?.map((pl) => pl.language),
-      dateOfBirth: profile?.dateOfBirth
-        ? profile.dateOfBirth.toString()
-        : undefined,
-      city: address?.city,
-      postalCode: address?.postalCode,
-      street: address?.street,
-      streetNumber: address?.streetNumber,
     });
   }, [profile, reset]);
 
@@ -189,356 +146,87 @@ export const ProfileSetupForm = () => {
     <section>
       <Steps currentStep={currentStep} steps={steps} />
 
-      <form onSubmit={handleSubmit(onSubmit)} className="">
-        {currentStep === 0 && (
-          <FormMotionDiv
-            delta={delta}
-            description="Податоци потребни за креирање профил"
-            title="Лични податоци"
-          >
-            <Controller
-              name="files"
-              control={control}
-              rules={{
-                validate: {
-                  required: (value) => {
-                    if (!value && !photoUrl) return "Задолжително";
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(onSubmit)} className="">
+          {currentStep === 0 && (
+            <FormMotionDiv
+              delta={delta}
+              description="Податоци потребни за креирање профил"
+              title="Лични податоци"
+            >
+              <Controller
+                name="files"
+                control={control}
+                rules={{
+                  validate: {
+                    required: (value) => {
+                      if (!value && !photoUrl) return "Задолжително";
+                    },
                   },
-                },
-              }}
-              render={({ field }) => (
-                <FormItem
-                  label="File"
-                  border
-                  error={errors[field.name]?.message}
-                >
-                  <FileInput
-                    {...field}
-                    onClear={() => {
-                      setValue("photoUrl", "");
-                    }}
-                    photoUrl={photoUrl}
-                    onChange={field.onChange}
-                    placeholder="File"
-                  />
-                </FormItem>
-              )}
-            />
+                }}
+                render={({ field }) => (
+                  <FormItem
+                    label="File"
+                    border
+                    error={errors[field.name]?.message}
+                  >
+                    <FileInput
+                      {...field}
+                      onClear={() => {
+                        setValue("photoUrl", "");
+                      }}
+                      photoUrl={photoUrl}
+                      onChange={field.onChange}
+                      placeholder="File"
+                    />
+                  </FormItem>
+                )}
+              />
 
-            <Controller
-              name="title"
-              control={control}
-              rules={{
-                required: "Задолжително",
-              }}
-              render={({ field }) => (
-                <FormItem
-                  label="Title"
-                  border
-                  error={errors[field.name]?.message}
-                >
-                  <Input
-                    {...field}
-                    onChange={field.onChange}
-                    value={field.value ?? ""}
-                    placeholder="Поглавје"
-                  />
-                </FormItem>
-              )}
-            />
+              <Controller
+                name="title"
+                control={control}
+                rules={{
+                  required: "Задолжително",
+                }}
+                render={({ field }) => (
+                  <FormItem
+                    label="Title"
+                    border
+                    error={errors[field.name]?.message}
+                  >
+                    <Input
+                      {...field}
+                      onChange={field.onChange}
+                      value={field.value ?? ""}
+                      placeholder="Поглавје"
+                    />
+                  </FormItem>
+                )}
+              />
 
-            <Controller
-              name="familyName"
-              control={control}
-              rules={{
-                required: "Задолжително",
-              }}
-              render={({ field }) => (
-                <FormItem
-                  label="Family Name"
-                  border
-                  error={errors[field.name]?.message}
-                >
-                  <Input
-                    {...field}
-                    onChange={field.onChange}
-                    value={field.value ?? ""}
-                    placeholder="Име на фамилија"
-                  />
-                </FormItem>
-              )}
-            />
+              <Controller
+                name="address"
+                rules={{
+                  required: "This is a required field",
+                }}
+                control={control}
+                render={({ field, fieldState }) => (
+                  <FormItem
+                    label="Address"
+                    border
+                    error={errors[field.name]?.message}
+                  >
+                    <GooglePlacesAutocompleteComponent {...field} />
+                  </FormItem>
+                )}
+              />
+            </FormMotionDiv>
+          )}
 
-            <Controller
-              name="description"
-              control={control}
-              rules={{
-                required: "Задолжително",
-              }}
-              render={({ field }) => (
-                <FormItem
-                  label="Description"
-                  border
-                  error={errors[field.name]?.message}
-                >
-                  <TextArea
-                    {...field}
-                    onChange={field.onChange}
-                    value={field.value ?? ""}
-                    placeholder="Опис"
-                  />
-                </FormItem>
-              )}
-            />
-
-            <Controller
-              name="dateOfBirth"
-              control={control}
-              rules={{
-                required: "Задолжително",
-              }}
-              render={({ field }) => (
-                <FormItem
-                  label="Date of Birth"
-                  border
-                  error={errors[field.name]?.message}
-                >
-                  <Input
-                    {...field}
-                    type="date"
-                    onChange={field.onChange}
-                    value={field.value}
-                    placeholder="Датум на раѓање"
-                  />
-                </FormItem>
-              )}
-            />
-          </FormMotionDiv>
-        )}
-
-        {currentStep === 1 && (
-          <FormMotionDiv
-            title="Гостински податоци"
-            description="Податоци кои што се од корист на гостите"
-            delta={delta}
-          >
-            <Controller
-              name="maximumPeople"
-              control={control}
-              rules={{
-                required: "Задолжително",
-              }}
-              render={({ field }) => (
-                <FormItem
-                  label="Maximum People"
-                  border
-                  error={errors[field.name]?.message}
-                >
-                  <Input
-                    {...field}
-                    onChange={field.onChange}
-                    type="number"
-                    value={field.value ?? ""}
-                    placeholder="Максимален број на луѓе"
-                  />
-                </FormItem>
-              )}
-            />
-
-            <Controller
-              name="isSmoking"
-              control={control}
-              render={({ field }) => (
-                <FormItem
-                  label="Is smoking?"
-                  border
-                  error={errors[field.name]?.message}
-                >
-                  <Checkbox
-                    {...field}
-                    onChange={field.onChange}
-                    value={field.value ?? false}
-                  />
-                </FormItem>
-              )}
-            />
-
-            <Controller
-              name="profileLanguages"
-              control={control}
-              rules={{
-                required: "Задолжително",
-                validate: (val) =>
-                  val.length < 1 ? "Одберете барем еден јазик" : undefined,
-              }}
-              render={({ field }) => (
-                <FormItem
-                  error={errors[field.name]?.message}
-                  label="Languages"
-                  border
-                >
-                  <MultiCheckboxSelect
-                    {...field}
-                    onChange={field.onChange}
-                    value={field.value || []}
-                    options={getSelectItemsFromProfileSelectableData(
-                      languages ?? [],
-                    )}
-                  ></MultiCheckboxSelect>
-                </FormItem>
-              )}
-            />
-
-            <Controller
-              name="profileDrinks"
-              rules={{
-                required: "Задолжително",
-                validate: (val) =>
-                  val.length < 1
-                    ? "Одберете барем еден вид на пијалок"
-                    : undefined,
-              }}
-              control={control}
-              render={({ field }) => (
-                <FormItem
-                  error={errors[field.name]?.message}
-                  label="Drinks"
-                  border
-                >
-                  <MultiCheckboxSelect
-                    onChange={field.onChange}
-                    value={field.value}
-                    options={getSelectItemsFromProfileSelectableData(
-                      drinkTypes ?? [],
-                    )}
-                  ></MultiCheckboxSelect>
-                </FormItem>
-              )}
-            />
-
-            <Controller
-              name="profileFoodTypes"
-              rules={{
-                required: "Задолжително",
-                validate: (val) =>
-                  val.length < 1
-                    ? "Одберете барем еден вид на храна"
-                    : undefined,
-              }}
-              control={control}
-              render={({ field }) => (
-                <FormItem error={errors[field.name]?.message} label="Foods">
-                  <MultiCheckboxSelect
-                    onChange={field.onChange}
-                    value={field.value}
-                    options={getSelectItemsFromProfileSelectableData(
-                      foodTypes ?? [],
-                    )}
-                  ></MultiCheckboxSelect>
-                </FormItem>
-              )}
-            />
-          </FormMotionDiv>
-        )}
-
-        {currentStep === 2 && (
-          <FormMotionDiv
-            delta={delta}
-            description="Податоци потребни за туристот да ве најде"
-            title="Адреса"
-          >
-            <Controller
-              name="street"
-              control={control}
-              rules={{
-                required: "Задолжително",
-              }}
-              render={({ field }) => (
-                <FormItem
-                  label="Улица"
-                  border
-                  error={errors[field.name]?.message}
-                >
-                  <Input
-                    {...field}
-                    onChange={field.onChange}
-                    value={field.value ?? ""}
-                    placeholder="Улица"
-                  />
-                </FormItem>
-              )}
-            />
-
-            <Controller
-              name="streetNumber"
-              control={control}
-              rules={{
-                required: "Задолжително",
-              }}
-              render={({ field }) => (
-                <FormItem
-                  label="Број"
-                  border
-                  error={errors[field.name]?.message}
-                >
-                  <Input
-                    {...field}
-                    onChange={field.onChange}
-                    value={field.value ?? ""}
-                    placeholder="Број"
-                  />
-                </FormItem>
-              )}
-            />
-
-            <Controller
-              name="city"
-              control={control}
-              rules={{
-                required: "Задолжително",
-              }}
-              render={({ field }) => (
-                <FormItem
-                  label="Град"
-                  border
-                  error={errors[field.name]?.message}
-                >
-                  <Input
-                    {...field}
-                    onChange={field.onChange}
-                    value={field.value ?? ""}
-                    placeholder="Град"
-                  />
-                </FormItem>
-              )}
-            />
-
-            <Controller
-              name="postalCode"
-              control={control}
-              rules={{
-                required: "Задолжително",
-              }}
-              render={({ field }) => (
-                <FormItem
-                  label="Поштенски број"
-                  border
-                  error={errors[field.name]?.message}
-                >
-                  <Input
-                    {...field}
-                    onChange={field.onChange}
-                    value={field.value ?? ""}
-                    placeholder="Поштенски број"
-                  />
-                </FormItem>
-              )}
-            />
-          </FormMotionDiv>
-        )}
-
-        {currentStep === 3 && <ProfileComplete />}
-      </form>
+          {currentStep === 1 && <ProfileComplete />}
+        </form>
+      </FormProvider>
 
       <div className="my-8 px-10 pt-5">
         <div className="flex justify-between">

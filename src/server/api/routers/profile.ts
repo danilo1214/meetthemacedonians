@@ -3,9 +3,6 @@ import { ProfileStatus, type Profile } from "@prisma/client";
 import { z } from "zod";
 import {
   createProfile,
-  getDrinkTypes,
-  getFoodTypes,
-  getLanguages,
   getProfile,
   getProfileById,
   getProfiles,
@@ -20,34 +17,11 @@ import {
 export const getProfileByIdValidator = z.number();
 
 export const createProfileValidator = z.object({
-  familyName: z.string(),
-  dateOfBirth: z.date(),
   photoUrl: z.string(),
   title: z.string(),
-  description: z.string(),
-  maximumPeople: z.number().min(0).max(6),
-  isSmoking: z.boolean(),
-  profileLanguages: z.array(
-    z.object({
-      id: z.number(), // Referencing existing Language IDs
-    }),
-  ),
-  profileDrinks: z.array(
-    z.object({
-      id: z.number(), // Referencing existing Drink IDs
-    }),
-  ),
-  profileFoodTypes: z.array(
-    z.object({
-      id: z.number(), // Referencing existing FoodType IDs
-    }),
-  ),
-  address: z.object({
-    street: z.string(),
-    city: z.string(),
-    streetNumber: z.string(),
-    postalCode: z.string(),
-  }),
+  lat: z.number(),
+  lng: z.number(),
+  address: z.string(),
 });
 
 export const fetchProfilesValidator = z.object({
@@ -66,41 +40,11 @@ export const fetchProfilesValidator = z.object({
 export const updateProfileValidator = z.object({
   id: z.number(),
   data: z.object({
-    familyName: z.string().optional(),
-    dateOfBirth: z.date().optional(),
     photoUrl: z.string().optional(),
     title: z.string().optional(),
-    neighbourhood: z.string().optional(),
-    description: z.string().optional(),
-    maximumPeople: z.number().min(0).max(6).optional(),
-    isSmoking: z.boolean().optional(),
-    profileLanguages: z
-      .array(
-        z.object({
-          id: z.number(), // Referencing existing Language IDs
-        }),
-      )
-      .optional(),
-    profileDrinks: z
-      .array(
-        z.object({
-          id: z.number(), // Referencing existing Drink IDs
-        }),
-      )
-      .optional(),
-    profileFoodTypes: z
-      .array(
-        z.object({
-          id: z.number(), // Referencing existing FoodType IDs
-        }),
-      )
-      .optional(),
-    address: z.object({
-      street: z.string().optional(),
-      city: z.string().optional(),
-      streetNumber: z.string().optional(),
-      postalCode: z.string().optional(),
-    }),
+    lat: z.number().optional(),
+    lng: z.number().optional(),
+    address: z.string().optional()
   }),
 });
 
@@ -121,34 +65,9 @@ export const profileRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }): Promise<Profile> => {
       return createProfile(ctx, {
         ...input,
-        neighbourhood: "",
         createdById: ctx.session.user.id,
-        profileLanguages: {
-          create: input.profileLanguages.map((lang) => ({
-            language: { connect: { id: lang.id } },
-          })),
-        },
-        profileDrinks: {
-          create: input.profileDrinks.map((drink) => ({
-            drink: { connect: { id: drink.id } },
-          })),
-        },
-        profileFoodTypes: {
-          create: input.profileFoodTypes.map((food) => ({
-            foodType: { connect: { id: food.id } },
-          })),
-        },
         status: ProfileStatus.PENDING,
-        address: {
-          create: {
-            ...input.address,
-            state: "",
-            country: "",
-            latitude: 0,
-            longitude: 0,
-            formattedAddress: "",
-          },
-        },
+        
       });
     }),
   updateProfile: protectedProcedure
@@ -159,122 +78,18 @@ export const profileRouter = createTRPCRouter({
       // Fetch the current profile with relations
       const existingProfile = await ctx.db.profile.findUnique({
         where: { id },
-        include: {
-          profileLanguages: true,
-          profileDrinks: true,
-          profileFoodTypes: true,
-        },
       });
 
       if (!existingProfile) {
         throw new Error("Profile not found");
       }
 
-      // Helper function to process many-to-many relations
-      const processRelations = (
-        existingIds: number[],
-        updatedIds: number[],
-      ) => {
-        console.log(existingIds, updatedIds);
+    
 
-        const toConnect = updatedIds.filter((id) => !existingIds.includes(id));
-        const toDisconnect = existingIds.filter(
-          (id) => !updatedIds.includes(id),
-        );
-
-        return {
-          toConnect: toConnect.length > 0 ? toConnect : undefined,
-          toDisconnect: toDisconnect.length > 0 ? toDisconnect : undefined,
-        };
-      };
-
-      // Process profileLanguages
-      const profileLanguages = processRelations(
-        existingProfile.profileLanguages.map((pl) => pl.languageId),
-        data.profileLanguages?.map((pl) => pl.id) ?? [],
-      );
-
-      // Process profileDrinks
-      const profileDrinks = processRelations(
-        existingProfile.profileDrinks.map((pd) => pd.drinkId),
-        data.profileDrinks?.map((pd) => pd.id) ?? [],
-      );
-
-      // Process profileFoodTypes
-      const profileFoodTypes = processRelations(
-        existingProfile.profileFoodTypes.map((pf) => pf.foodTypeId),
-        data.profileFoodTypes?.map((pf) => pf.id) ?? [],
-      );
-
-      console.log(profileFoodTypes);
-
-      // Update the profile
       await ctx.db.profile.update({
         where: { id },
         data: {
           ...data,
-          profileLanguages: {
-            connectOrCreate: profileLanguages.toConnect?.map((languageId) => ({
-              where: {
-                profileId_languageId: {
-                  profileId: id,
-                  languageId,
-                },
-              },
-              create: {
-                languageId: languageId,
-              },
-            })),
-            deleteMany: profileLanguages.toDisconnect?.map((languageId) => ({
-              profileId: id,
-              languageId,
-            })),
-          },
-          status: ProfileStatus.PENDING,
-          profileDrinks: {
-            connectOrCreate: profileDrinks.toConnect?.map((drinkId) => ({
-              where: {
-                profileId_drinkId: {
-                  profileId: id,
-                  drinkId,
-                },
-              },
-              create: {
-                drinkId,
-              },
-            })),
-            deleteMany: profileDrinks.toDisconnect?.map((drinkId) => ({
-              profileId: id,
-              drinkId,
-            })),
-          },
-          profileFoodTypes: {
-            connectOrCreate: profileFoodTypes.toConnect?.map((foodTypeId) => ({
-              where: {
-                profileId_foodTypeId: {
-                  profileId: id,
-                  foodTypeId,
-                },
-              },
-              create: {
-                foodTypeId,
-              },
-            })),
-            deleteMany: profileFoodTypes.toDisconnect?.map((foodTypeId) => ({
-              profileId: id,
-              foodTypeId,
-            })),
-          },
-          address: {
-            update: {
-              ...input.data.address,
-              state: "",
-              country: "Macedonia",
-              latitude: 0,
-              longitude: 0,
-              formattedAddress: "",
-            },
-          },
         },
       });
     }),
@@ -288,13 +103,9 @@ export const profileRouter = createTRPCRouter({
     const profile = await getProfile(ctx);
     return profile ?? null;
   }),
-  getDrinkTypes: publicProcedure.query(async () => {
-    return await getDrinkTypes();
-  }),
-  getLanguages: publicProcedure.query(async () => {
-    return await getLanguages();
-  }),
-  getFoodTypes: publicProcedure.query(async () => {
-    return await getFoodTypes();
-  }),
+
+  getProfiles: publicProcedure.query(async () => {
+    return getProfiles({})
+  })
+ 
 });

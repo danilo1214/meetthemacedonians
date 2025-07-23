@@ -31,6 +31,7 @@
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.1.4",
     "@prisma/client": "^5.14.0",
+    "@react-google-maps/api": "^2.20.7",
     "@sendgrid/mail": "^8.1.4",
     "@t3-oss/env-nextjs": "^0.10.1",
     "@tanstack/react-query": "^5.50.0",
@@ -39,6 +40,7 @@
     "@trpc/react-query": "^11.0.0-rc.446",
     "@trpc/server": "^11.0.0-rc.446",
     "@vercel/blob": "^0.27.0",
+    "@vis.gl/react-google-maps": "^1.5.4",
     "axios": "^1.8.4",
     "classnames": "^2.5.1",
     "framer-motion": "^11.17.0",
@@ -50,9 +52,12 @@
     "react-country-region-selector": "^4.0.2",
     "react-datetime-picker": "^6.0.1",
     "react-dom": "^18.3.1",
+    "react-google-places-autocomplete": "^4.1.0",
     "react-hook-form": "^7.54.0",
+    "react-qr-code": "^2.0.18",
     "react-toastify": "^10.0.6",
     "superjson": "^2.2.1",
+    "use-places-autocomplete": "^4.0.1",
     "zod": "^3.23.3"
   },
   "devDependencies": {
