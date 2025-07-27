@@ -38,7 +38,7 @@ const steps = [
   {
     id: "1",
     name: "Лични податоци",
-    fields: ["files", "title", "familyName", "dateOfBirth", "description"],
+    fields: ["files", "title", "address"],
   },
   { id: "2", name: "Профил испратен во проверка", fields: [] },
 ];
@@ -142,6 +142,8 @@ export const ProfileSetupForm = () => {
     });
   }, [profile, reset]);
 
+  console.log(errors, address);
+
   return (
     <section>
       <Steps currentStep={currentStep} steps={steps} />
@@ -166,7 +168,7 @@ export const ProfileSetupForm = () => {
                 }}
                 render={({ field }) => (
                   <FormItem
-                    label="File"
+                    label="Профилна слика"
                     border
                     error={errors[field.name]?.message}
                   >
@@ -191,7 +193,7 @@ export const ProfileSetupForm = () => {
                 }}
                 render={({ field }) => (
                   <FormItem
-                    label="Title"
+                    label="Наслов"
                     border
                     error={errors[field.name]?.message}
                   >
@@ -208,16 +210,24 @@ export const ProfileSetupForm = () => {
               <Controller
                 name="address"
                 rules={{
-                  required: "This is a required field",
+                  validate: {
+                    required: (value) => {
+                      console.log(value);
+                      if (!value) return "Задолжително";
+                    },
+                  },
                 }}
                 control={control}
-                render={({ field, fieldState }) => (
+                render={({ field }) => (
                   <FormItem
-                    label="Address"
+                    label="Адреса"
                     border
                     error={errors[field.name]?.message}
                   >
-                    <GooglePlacesAutocompleteComponent {...field} />
+                    <GooglePlacesAutocompleteComponent
+                      {...field}
+                      onChange={field.onChange}
+                    />
                   </FormItem>
                 )}
               />

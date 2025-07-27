@@ -38,7 +38,7 @@ export const GooglePlacesAutocompleteComponent = ({
 
       console.log(place, lat, lng);
 
-      setValue("address", place.formatted_address);
+      field.onChange(place.formatted_address);
       setValue("lat", lat);
       setValue("lng", lng);
     });

@@ -23,6 +23,8 @@ export const ProfileMarker = ({ profile, isOpen, onClick }: Props) => {
       {isOpen && (
         <InfoWindow
           position={{ lat: profile.lat, lng: profile.lng }}
+          className="p-0"
+          headerDisabled
           onCloseClick={onClick}
         >
           <ProfileCard profile={profile} />

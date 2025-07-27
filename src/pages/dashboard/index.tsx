@@ -7,41 +7,11 @@ import { ReservationRequest } from "~/components/reservation/ReservationRequest"
 import { appRouter } from "~/server/api/root";
 import { createInnerTRPCContext } from "~/server/api/trpc";
 import { authConfig } from "~/server/auth/config";
-import { helpers } from "~/server/helpers";
-import { toastError } from "~/util";
 import { api } from "~/utils/api";
 
 export default function Dashboard() {
-  const utils = api.useUtils();
-
   const { data: requests } = api.reservation.getReservationRequests.useQuery();
   const { data: reservations } = api.reservation.getReservations.useQuery();
-
-  const { mutateAsync: acceptReservation } =
-    api.reservation.acceptReservation.useMutation();
-  const { mutateAsync: declineReservation } =
-    api.reservation.declineReservation.useMutation();
-
-  const handleAccept = async (reservationId: number) => {
-    try {
-      await acceptReservation(reservationId);
-      await utils.reservation.invalidate();
-      toast("Successfully accepted reservation");
-      console.log("mmm what?");
-    } catch (err) {
-      toastError(err);
-    }
-  };
-
-  const handleDecline = async (reservationId: number) => {
-    try {
-      await declineReservation(reservationId);
-      await utils.reservation.invalidate();
-      toast("Successfully declined reservation");
-    } catch (err) {
-      toastError(err);
-    }
-  };
 
   return (
     <main className="p-4">
@@ -59,9 +29,6 @@ export default function Dashboard() {
               <ReservationRequest
                 key={reservation.id}
                 reservation={reservation}
-                onAccept={() => handleAccept(reservation.id)}
-                onDecline={() => handleDecline(reservation.id)}
-                showActions
               />
             ))}
           </div>

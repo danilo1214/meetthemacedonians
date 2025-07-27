@@ -30,7 +30,7 @@ export default function ProfileView() {
     <>
       <Meta
         image={profile.photoUrl}
-        title={`Make a reservation at ${profile.familyName}`}
+        title={`Make a reservation at ${profile.title}`}
         description="Traditional macedonian food with locals"
       />
 

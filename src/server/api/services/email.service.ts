@@ -33,14 +33,14 @@ export async function sendReservationComplete(
 
   const { address } = reservation.profile;
   if (address) {
-    addressStr = `${address.street} - ${address.streetNumber}, ${address.city}, ${address.country}`;
+    addressStr = address;
   }
 
   const data = {
     firstName: reservation.firstName,
     lastName: reservation.lastName,
-    date: moment(reservation.date).format("MMMM D, YYYY [at] h:mm A"),
-    country: reservation.country,
+    from: moment(reservation.dateFrom).format("MMMM D, YYYY [at] h:mm A"),
+    to: moment(reservation.dateTo).format("MMMM D, YYYY [at] h:mm A"),
     email: reservation.email,
     phoneNumber: reservation.phoneNumber,
     note: reservation.note,

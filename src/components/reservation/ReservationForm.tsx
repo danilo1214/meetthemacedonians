@@ -1,3 +1,4 @@
+import moment from "moment";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import {
@@ -14,17 +15,16 @@ import { TextArea } from "~/components/generic/TextArea";
 import { toastError } from "~/util";
 import { api } from "~/utils/api";
 
-const RESERVATION_PRICE = 15;
+const RESERVATION_PRICE = 3.5;
 
 export type TReservationForm = {
-  firstName: string;
-  lastName: string;
-  note: string;
   email: string;
   phoneNumber: string;
-  date: string;
+  dateFrom: string;
+  dateTo: string;
+  hours: number;
   country: string;
-  peopleAges: { age: number }[];
+  bags: number;
 };
 
 interface ReservationFormProps {
@@ -40,37 +40,25 @@ export const ReservationForm = ({
     api.reservation.createReservation.useMutation();
 
   const {
+    watch,
     control,
     handleSubmit,
     formState: { errors },
   } = useForm<TReservationForm>({
     defaultValues: {
-      peopleAges: [{ age: 0 }], // At least one guest
+      bags: 1,
     },
   });
 
-  const { fields, append, replace } = useFieldArray({
-    control,
-    name: "peopleAges",
-  });
-
-  const onGuestChange = (value: number) => {
-    if (value > fields.length) {
-      // Add new guests
-      append(Array(value - fields.length).fill({ age: 0 }));
-    } else {
-      // Remove excess guests
-      replace(fields.slice(0, value));
-    }
-  };
-
   const onSubmit: SubmitHandler<TReservationForm> = async (data) => {
+    console.log(data);
     try {
       await createReservation({
         ...data,
         profileId,
-        date: new Date(data.date),
-        peopleAges: data.peopleAges.map((p) => p.age), // Convert objects to array of numbers
+        bags: Number(bags),
+        dateFrom: new Date(data.dateFrom),
+        dateTo: moment(data.dateFrom).add(data.hours, "h").toDate(),
       });
       toast("Successfully made reservation");
 
@@ -82,7 +70,8 @@ export const ReservationForm = ({
     }
   };
 
-  const totalPrice = (fields.length ?? 1) * RESERVATION_PRICE;
+  const bags = watch("bags");
+  const totalPrice = (bags ?? 1) * RESERVATION_PRICE;
 
   return (
     <div className="mx-lg flex flex-col border-t-2 border-t-gray-100 px-5 lg:items-center lg:px-12">
@@ -92,37 +81,11 @@ export const ReservationForm = ({
       </h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Controller
-          name="firstName"
+          name="dateFrom"
           control={control}
           rules={{ required: "Required" }}
           render={({ field }) => (
-            <FormItem
-              label="First Name"
-              border
-              error={errors.firstName?.message}
-            >
-              <Input {...field} placeholder="First Name" />
-            </FormItem>
-          )}
-        />
-
-        <Controller
-          name="lastName"
-          control={control}
-          rules={{ required: "Required" }}
-          render={({ field }) => (
-            <FormItem label="Last Name" border error={errors.lastName?.message}>
-              <Input {...field} placeholder="Last Name" />
-            </FormItem>
-          )}
-        />
-
-        <Controller
-          name="date"
-          control={control}
-          rules={{ required: "Required" }}
-          render={({ field }) => (
-            <FormItem label="Date and time" border error={errors.date?.message}>
+            <FormItem label="From" border error={errors.dateFrom?.message}>
               <Input
                 {...field}
                 type="datetime-local"
@@ -133,23 +96,12 @@ export const ReservationForm = ({
         />
 
         <Controller
-          name="note"
+          name="hours"
           control={control}
           rules={{ required: "Required" }}
           render={({ field }) => (
-            <FormItem label="Notes" border error={errors.note?.message}>
-              <TextArea {...field} placeholder="Note to the host" />
-            </FormItem>
-          )}
-        />
-
-        <Controller
-          name="country"
-          control={control}
-          rules={{ required: "Required" }}
-          render={({ field }) => (
-            <FormItem label="Country" border error={errors.country?.message}>
-              <Input {...field} placeholder="Country" />
+            <FormItem label="Hours" border error={errors.hours?.message}>
+              <Input {...field} type="number" placeholder="Hours" />
             </FormItem>
           )}
         />
@@ -193,50 +145,21 @@ export const ReservationForm = ({
           )}
         />
 
-        <FormItem label="Guests" border>
-          <div className="text-xs">
-            <div className="mb-2 flex w-64 content-center items-center justify-between gap-x-2">
-              <div>Number of guests</div>
-              <Input
-                classNames="w-20"
-                value={fields.length}
-                onChange={(v) => onGuestChange(Number(v))}
-                type="number"
-                placeholder="Country"
-              />
-            </div>
-
-            {fields.map((field, idx) => (
-              <div
-                key={field.id}
-                className="flex w-64 items-center justify-between gap-x-2"
-              >
-                <label>Guest {idx + 1} age</label>
-                <Controller
-                  name={`peopleAges.${idx}.age`}
-                  control={control}
-                  rules={{
-                    required: "Required",
-                    min: { value: 1, message: "Age must be 1 or more" },
-                  }}
-                  render={({ field }) => (
-                    <Input
-                      classNames="w-20"
-                      type="number"
-                      {...field}
-                      placeholder="Enter age"
-                      onChange={(value) => field.onChange(Number(value))} // Ensure number conversion
-                    />
-                  )}
-                />
-              </div>
-            ))}
-          </div>
-        </FormItem>
+        <Controller
+          name="bags"
+          control={control}
+          rules={{
+            required: "Required",
+          }}
+          render={({ field }) => (
+            <FormItem label="Bags" border error={errors.bags?.message}>
+              <Input {...field} placeholder="Bags" type="number" />
+            </FormItem>
+          )}
+        />
 
         <div className="my-10 border-t border-t-black py-10">
           <div className="">
-            {fields.length}x Dinner for one person{" "}
             <span className="font-bold">{RESERVATION_PRICE} EUR</span>
           </div>
           <div>

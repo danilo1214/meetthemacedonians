@@ -7,8 +7,6 @@ export const profileIncludeOptions = {
 
 export const reservationIncludeOptions = {
   include: {
-    people: true,
-    profile: profileIncludeOptions,
   },
 };
 
