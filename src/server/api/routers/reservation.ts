@@ -9,6 +9,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
+import { generatePaymentForReservation } from "../services/payment.service";
 
 export const createReservationValidator = z.object({
   dateFrom: z.date(),
@@ -16,7 +17,7 @@ export const createReservationValidator = z.object({
   email: z.string(),
   phoneNumber: z.string(),
   profileId: z.number(),
-  bags: z.number()
+  bags: z.number(),
 });
 
 export const reservationRouter = createTRPCRouter({
@@ -29,14 +30,25 @@ export const reservationRouter = createTRPCRouter({
   createReservation: publicProcedure
     .input(createReservationValidator)
     .mutation(async ({ input }) => {
-      return createReservation({
+      const reservation = await createReservation({
         email: input.email,
-        status: ReservationStatus.ACCEPTED,
+        status: ReservationStatus.PENDING,
         phoneNumber: input.phoneNumber,
         dateFrom: input.dateFrom,
         dateTo: input.dateTo,
         profileId: input.profileId,
         bags: input.bags,
       });
+
+      const paymentResponse = await generatePaymentForReservation(reservation);
+
+      const paymentLink: string | undefined =
+        paymentResponse?.data?.data?.attributes.url;
+
+      if (!paymentLink) {
+        throw new Error("Error generating payment form.");
+      }
+
+      return paymentLink;
     }),
 });

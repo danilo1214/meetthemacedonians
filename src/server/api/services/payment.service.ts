@@ -38,7 +38,7 @@ export const generatePaymentForReservation = async (
               variant_quantities: [
                 {
                   variant_id: env.LEMONSQUEEZY_PRODUCT_ID,
-                  quantity: reservation.people.length,
+                  quantity: reservation.bags,
                 },
               ],
             },

@@ -20,11 +20,16 @@ export default function ProfileView() {
 
   const { data: profile } = api.profile.getProfileById.useQuery(profileId);
 
+  const [link, setLink] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   if (!profile) {
     return null;
   }
+  const handleReservationSuccess = (link?: string) => {
+    setIsSubmitted(true);
+    setLink(link ?? "");
+  };
 
   return (
     <>
@@ -41,11 +46,11 @@ export default function ProfileView() {
         {!isSubmitted && (
           <ReservationForm
             profileId={profileId}
-            onSuccess={() => setIsSubmitted(true)}
+            onSuccess={handleReservationSuccess}
           />
         )}
 
-        {isSubmitted && <ReservationConfirmation />}
+        {isSubmitted && <ReservationConfirmation link={link} />}
       </main>
     </>
   );

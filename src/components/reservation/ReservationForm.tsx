@@ -29,7 +29,7 @@ export type TReservationForm = {
 
 interface ReservationFormProps {
   profileId: number;
-  onSuccess?: () => void;
+  onSuccess?: (link?: string) => void;
 }
 
 export const ReservationForm = ({
@@ -53,17 +53,16 @@ export const ReservationForm = ({
   const onSubmit: SubmitHandler<TReservationForm> = async (data) => {
     console.log(data);
     try {
-      await createReservation({
+      const link = await createReservation({
         ...data,
         profileId,
         bags: Number(bags),
         dateFrom: new Date(data.dateFrom),
         dateTo: moment(data.dateFrom).add(data.hours, "h").toDate(),
       });
-      toast("Successfully made reservation");
 
       if (onSuccess) {
-        onSuccess();
+        onSuccess(link);
       }
     } catch (err) {
       toastError(err);

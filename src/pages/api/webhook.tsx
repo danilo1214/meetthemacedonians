@@ -63,7 +63,7 @@ export default async function handler(
             id: reservationId,
           },
           data: {
-            status: ReservationStatus.APPROVED,
+            status: ReservationStatus.ACCEPTED,
           },
           ...reservationIncludeOptions,
         });
