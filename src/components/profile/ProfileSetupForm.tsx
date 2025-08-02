@@ -7,22 +7,16 @@ import {
 } from "react-hook-form";
 import { toast } from "react-toastify";
 import { upload } from "@vercel/blob/client";
-import { Checkbox } from "~/components/generic/Checkbox";
 import { FormItem } from "~/components/generic/FormItem";
 import { Input } from "~/components/generic/Input";
-import { MultiCheckboxSelect } from "~/components/generic/MultiCheckboxSelect";
-import { TextArea } from "~/components/generic/TextArea";
-import { getSelectItemsFromProfileSelectableData, toastError } from "~/util";
 import { api } from "~/utils/api";
 import { FileInput } from "~/components/generic/FileInput";
 import { FormMotionDiv } from "~/components/generic/FormMotionDiv";
 import { Steps } from "~/components/generic/Steps";
 import { Button } from "~/components/generic/Button";
 import { ProfileComplete } from "~/components/profile/ProfileComplete";
-import { ProfileCard } from "~/components/profile/ProfileCard";
-import { useLoadScript } from "@react-google-maps/api";
-import { env } from "~/env";
 import { GooglePlacesAutocompleteComponent } from "../generic/GooglePlacesAutocomplete";
+import { toastError } from "~/util";
 
 export type TProfileSetupForm = {
   photoUrl: string;

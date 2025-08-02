@@ -1,17 +1,9 @@
-import {
-  type ReservationStatus,
-  type Prisma,
-  type Reservation,
-} from "@prisma/client";
+import { type ReservationStatus, type Prisma } from "@prisma/client";
 import {
   reservationIncludeOptions,
   type TPopulatedReservation,
 } from "~/server/api/types";
 import { db } from "~/server/db";
-
-
-
-
 
 export const getUserReservations = async (
   userId: string,
@@ -28,11 +20,11 @@ export const getUserReservations = async (
   });
 };
 
-
 export const createReservation = async (
   data: Prisma.ReservationCreateArgs["data"],
-): Promise<Reservation> => {
+): Promise<TPopulatedReservation> => {
   return db.reservation.create({
     data,
+    ...reservationIncludeOptions,
   });
 };

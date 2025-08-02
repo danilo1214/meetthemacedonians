@@ -1,16 +1,6 @@
-import {
-  type Address,
-  type Drink,
-  type FoodType,
-  type Language,
-} from "@prisma/client";
 import { getImageProps } from "next/image";
 import { toast } from "react-toastify";
 import { type CheckboxSelectItem } from "~/components/generic/MultiCheckboxSelect";
-
-export const formatAddress = (address: Address) => {
-  return `${address.streetNumber} ${address.street}, ${address.city}, ${address.state}, ${address.postalCode}, ${address.country}`;
-};
 
 export const getBackgroundImageStyle = ({
   width,
@@ -44,12 +34,6 @@ export const getBackgroundImageStyle = ({
   const backgroundImage = `image-set(${imageSet})`;
 
   return { backgroundImage };
-};
-
-export const getSelectItemsFromProfileSelectableData = (
-  arr: Language[] | FoodType[] | Drink[],
-): CheckboxSelectItem<object>[] => {
-  return arr.map((i) => ({ label: i.mkName, value: i }));
 };
 
 export const toastError = (err: unknown) => {

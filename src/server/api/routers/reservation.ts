@@ -10,6 +10,7 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 import { generatePaymentForReservation } from "../services/payment.service";
+import { reservationIncludeOptions } from "../types";
 
 export const createReservationValidator = z.object({
   dateFrom: z.date(),

@@ -1,8 +1,4 @@
-import {
-  type Profile,
-  type Prisma,
-  ProfileStatus,
-} from "@prisma/client";
+import { type Profile, type Prisma, ProfileStatus } from "@prisma/client";
 import { type Context } from "~/server/api/trpc";
 import {
   profileIncludeOptions,
@@ -30,56 +26,10 @@ export const getProfile = (ctx: Context): Promise<TPopulatedProfile | null> => {
   });
 };
 
-export const getProfiles = async ({
-  search,
-  ageRange,
-  city,
-}: {
-  search?: string;
-  ageRange?: number[];
-  city?: string;
-  date?: Date;
-  guests?: number;
-}): Promise<TPopulatedProfile[]> => {
-  const where: {
-    AND: Prisma.ProfileWhereInput[];
-    OR?: Prisma.ProfileWhereInput[];
-  } = {
-  };
-
-  if (ageRange) {
-    const startAge = ageRange[0];
-    const endAge = ageRange[1];
-    if (!startAge || !endAge) {
-      throw new Error("age range should be 2");
-    }
-
-   
-  }
-
-  if (search) {
-    where.OR = [
-      {
-        title: {
-          contains: search,
-        },
-      },
-    ];
-  }
-
-
-  if (city) {
-    where.AND.push({
-    });
-  }
-
-
+export const getProfiles = async (): Promise<TPopulatedProfile[]> => {
   const profiles = await db.profile.findMany({
-    where: where ?? undefined,
     ...profileIncludeOptions,
   });
-
-  console.log(profiles)
 
   return profiles ?? [];
 };
@@ -105,5 +55,3 @@ export const createProfile = (
     data: input,
   });
 };
-
-

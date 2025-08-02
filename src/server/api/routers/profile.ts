@@ -44,7 +44,7 @@ export const updateProfileValidator = z.object({
     title: z.string().optional(),
     lat: z.number().optional(),
     lng: z.number().optional(),
-    address: z.string().optional()
+    address: z.string().optional(),
   }),
 });
 
@@ -52,13 +52,7 @@ export const profileRouter = createTRPCRouter({
   fetchProfiles: publicProcedure
     .input(fetchProfilesValidator)
     .query(async ({ ctx, input }) => {
-      return getProfiles({
-        ageRange: input.ageRange,
-        date: input.date,
-        city: input.city,
-        search: input.search,
-        guests: input.guests,
-      });
+      return getProfiles();
     }),
   createProfile: protectedProcedure
     .input(createProfileValidator)
@@ -67,7 +61,6 @@ export const profileRouter = createTRPCRouter({
         ...input,
         createdById: ctx.session.user.id,
         status: ProfileStatus.PENDING,
-        
       });
     }),
   updateProfile: protectedProcedure
@@ -83,8 +76,6 @@ export const profileRouter = createTRPCRouter({
       if (!existingProfile) {
         throw new Error("Profile not found");
       }
-
-    
 
       await ctx.db.profile.update({
         where: { id },
@@ -105,7 +96,6 @@ export const profileRouter = createTRPCRouter({
   }),
 
   getProfiles: publicProcedure.query(async () => {
-    return getProfiles({})
-  })
- 
+    return getProfiles();
+  }),
 });
