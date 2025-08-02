@@ -65,9 +65,6 @@ export const ReservationRequest = ({
         />
       )}
       <div className="mb-2 flex items-center justify-between">
-        <h2 className="text-md font-semibold">
-          {reservation.firstName} {reservation.lastName}
-        </h2>
         <span
           className={`rounded-full px-3 py-1 text-sm font-medium text-white ${"bg-secondary-500"}`}
         >
@@ -79,11 +76,6 @@ export const ReservationRequest = ({
           <span className="font-medium">📅 Date:</span>
           <span>{new Date(reservation.dateFrom).toISOString()}</span>
         </div>
-        {reservation.note && (
-          <div className="border-t pt-1 text-xs italic text-gray-600">
-            {reservation.note}
-          </div>
-        )}
       </div>
     </div>
   );
