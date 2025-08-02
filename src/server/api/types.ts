@@ -1,12 +1,12 @@
 import { type Prisma } from "@prisma/client";
 
 export const profileIncludeOptions = {
-  include: {
-  },
+  include: {},
 };
 
 export const reservationIncludeOptions = {
   include: {
+    profile: true,
   },
 };
 

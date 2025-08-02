@@ -29,23 +29,15 @@ mail.setApiKey(env.SENDGRID_API_KEY);
 export async function sendReservationComplete(
   reservation: TPopulatedReservation,
 ): Promise<void> {
-  let addressStr = "";
-
-  const { address } = reservation.profile;
-  if (address) {
-    addressStr = address;
-  }
+  const addressStr = reservation.profile.address;
 
   const data = {
-    firstName: reservation.firstName,
-    lastName: reservation.lastName,
     from: moment(reservation.dateFrom).format("MMMM D, YYYY [at] h:mm A"),
     to: moment(reservation.dateTo).format("MMMM D, YYYY [at] h:mm A"),
     email: reservation.email,
     phoneNumber: reservation.phoneNumber,
-    note: reservation.note,
     address: addressStr,
-    people: reservation.people,
+    bags: reservation.bags,
     currentYear: new Date().getFullYear(),
   };
 
@@ -60,26 +52,6 @@ export async function sendReservationComplete(
 
     console.log("sending mail");
     console.log(JSON.stringify(msg));
-
-    await mail.send(msg);
-  } catch (err) {
-    console.log(err);
-  }
-}
-export async function sendReservationPayment(
-  reservation: Reservation,
-): Promise<void> {
-  try {
-    const msg = {
-      to: reservation.email,
-      from: RESERVATION_FROM,
-      subject: mails[EMAIL_TEMPLATES.RESERVATION_PAYMENT].subject,
-      templateId: EMAIL_TEMPLATES.RESERVATION_PAYMENT,
-      dynamicTemplateData: {
-        first_name: `${reservation.lastName} ${reservation.firstName}`,
-        payment_link: reservation.paymentLink,
-      },
-    };
 
     await mail.send(msg);
   } catch (err) {
