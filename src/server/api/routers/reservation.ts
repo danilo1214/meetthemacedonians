@@ -3,6 +3,7 @@ import { z } from "zod";
 import {
   createReservation,
   getUserReservations,
+  getReservationById,
 } from "~/server/api/services/reservation.service";
 import {
   createTRPCRouter,
@@ -28,6 +29,11 @@ export const reservationRouter = createTRPCRouter({
   getReservations: protectedProcedure.query(async ({ ctx }) => {
     return getUserReservations(ctx.session.user.id, ReservationStatus.ACCEPTED);
   }),
+  getReservationById: publicProcedure
+    .input(z.number())
+    .query(async ({ input }) => {
+      return getReservationById(input);
+    }),
   createReservation: publicProcedure
     .input(createReservationValidator)
     .mutation(async ({ input }) => {

@@ -3,24 +3,16 @@
 import { useEffect, useState } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 import { APIProvider, Map, Marker } from "@vis.gl/react-google-maps";
-import { TPopulatedProfile } from "~/server/api/types";
+import { TPopulatedProfile, TPopulatedReservation } from "~/server/api/types";
+import { env } from "~/env";
 
 type ReservationConfirmationProps = {
-  reservation: {
-    id: number;
-    dateFrom: string;
-    dateTo: string;
-    bags: number;
-    email: string;
-    phoneNumber: string;
-    paymentLink?: string | null;
-    profile: TPopulatedProfile;
-  };
+  reservation: TPopulatedReservation;
 };
 
-export default function ReservationConfirmation({
+export const ReservationConfirmed = ({
   reservation,
-}: ReservationConfirmationProps) {
+}: ReservationConfirmationProps) => {
   const { profile } = reservation;
 
   const qrValue = `reservation:${reservation.id}`;
@@ -76,7 +68,7 @@ export default function ReservationConfirmation({
 
       {/* Map */}
       <div className="h-64 w-full overflow-hidden rounded-xl">
-        <APIProvider apiKey={googleMapsApiKey}>
+        <APIProvider apiKey={env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}>
           <Map
             defaultCenter={{ lat: profile.lat, lng: profile.lng }}
             defaultZoom={15}
@@ -89,4 +81,4 @@ export default function ReservationConfirmation({
       </div>
     </div>
   );
-}
+};
