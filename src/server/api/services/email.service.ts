@@ -2,6 +2,7 @@ import { type Reservation } from "@prisma/client";
 import mail from "@sendgrid/mail";
 import moment from "moment";
 import { env } from "~/env";
+import QRCode from "qrcode";
 import { type TPopulatedReservation } from "~/server/api/types";
 
 const RESERVATION_FROM = "help@meetthemacedonians.com";
@@ -29,17 +30,15 @@ mail.setApiKey(env.SENDGRID_API_KEY);
 export async function sendReservationComplete(
   reservation: TPopulatedReservation,
 ): Promise<void> {
-  const addressStr = reservation.profile.address;
+  const { id, dateFrom, dateTo, profile, bags, phoneNumber } = reservation;
 
-  const data = {
-    from: moment(reservation.dateFrom).format("MMMM D, YYYY [at] h:mm A"),
-    to: moment(reservation.dateTo).format("MMMM D, YYYY [at] h:mm A"),
-    email: reservation.email,
-    phoneNumber: reservation.phoneNumber,
-    address: addressStr,
-    bags: reservation.bags,
-    currentYear: new Date().getFullYear(),
-  };
+  // 1️⃣ Generate QR code as base64 URL
+  const qrCodeBase64 = await QRCode.toDataURL(
+    `https://meetthemacedonians.com/confirmation/${id}`,
+  );
+
+  // 2️⃣ Generate Static Map URL
+  const mapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${profile.lat},${profile.lng}&zoom=16&size=600x300&markers=color:red%7C${profile.lat},${profile.lng}&key=${env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`;
 
   try {
     const msg = {
@@ -47,7 +46,18 @@ export async function sendReservationComplete(
       from: RESERVATION_FROM,
       subject: mails[EMAIL_TEMPLATES.RESERVATION_CONFIRMATION].subject,
       templateId: EMAIL_TEMPLATES.RESERVATION_CONFIRMATION,
-      dynamicTemplateData: data,
+      dynamicTemplateData: {
+        dateFrom: new Date(dateFrom).toLocaleDateString(),
+        dateTo: new Date(dateTo).toLocaleDateString(),
+        address: profile.address,
+        bags,
+        phoneNumber,
+        reservationId: id,
+        qrCodeUrl: qrCodeBase64,
+        lat: profile.lat,
+        lng: profile.lng,
+        mapUrl,
+      },
     };
 
     console.log("sending mail");
