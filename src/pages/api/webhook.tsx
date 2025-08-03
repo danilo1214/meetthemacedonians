@@ -68,7 +68,7 @@ export default async function handler(
           ...reservationIncludeOptions,
         });
 
-        void sendReservationComplete(updatedRes);
+        await sendReservationComplete(updatedRes);
 
         res.status(200).end();
         return;
