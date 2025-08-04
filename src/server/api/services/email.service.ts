@@ -3,6 +3,8 @@ import mail from "@sendgrid/mail";
 import moment from "moment";
 import { env } from "~/env";
 import QRCode from "qrcode";
+import { put } from "@vercel/blob"; // for direct server-side uploads
+
 import { type TPopulatedReservation } from "~/server/api/types";
 
 const RESERVATION_FROM = "help@meetthemacedonians.com";
@@ -25,13 +27,6 @@ const mails: Record<EMAIL_TEMPLATES, IMail> = {
   },
 };
 
-const escapeForSendGrid = (str: string) => {
-  return str
-    .replace(/&/g, "&amp;") // Escape &
-    .replace(/'/g, "&#39;") // Escape single quote
-    .replace(/"/g, "&quot;"); // Escape double quote
-};
-
 mail.setApiKey(env.SENDGRID_API_KEY);
 
 export async function sendReservationComplete(
@@ -43,6 +38,15 @@ export async function sendReservationComplete(
   const qrCodeBase64 = await QRCode.toDataURL(
     `https://meetthemacedonians.com/confirmation/${id}`,
   );
+
+  const base64Data = qrCodeBase64.replace(/^data:image\/\w+;base64,/, "");
+  const buffer = Buffer.from(base64Data, "base64");
+
+  // Upload to Vercel Blob Storage
+  const blob = await put(`qrcodes/reservation-${reservation.id}.png`, buffer, {
+    access: "public", // make it public so email clients can load it
+    contentType: "image/png",
+  });
 
   // 2️⃣ Generate Static Map URL
   const mapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${profile.lat},${profile.lng}&zoom=16&size=600x300&markers=color:red%7C${profile.lat},${profile.lng}&key=${env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`;
@@ -60,7 +64,7 @@ export async function sendReservationComplete(
         bags,
         phoneNumber,
         reservationId: id,
-        qrCodeUrl: escapeForSendGrid(qrCodeBase64),
+        qrCodeUrl: blob.url,
         lat: profile.lat,
         lng: profile.lng,
         mapUrl,
