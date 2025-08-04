@@ -25,6 +25,13 @@ const mails: Record<EMAIL_TEMPLATES, IMail> = {
   },
 };
 
+const escapeForSendGrid = (str: string) => {
+  return str
+    .replace(/&/g, "&amp;") // Escape &
+    .replace(/'/g, "&#39;") // Escape single quote
+    .replace(/"/g, "&quot;"); // Escape double quote
+};
+
 mail.setApiKey(env.SENDGRID_API_KEY);
 
 export async function sendReservationComplete(
@@ -53,7 +60,7 @@ export async function sendReservationComplete(
         bags,
         phoneNumber,
         reservationId: id,
-        qrCodeUrl: qrCodeBase64,
+        qrCodeUrl: escapeForSendGrid(qrCodeBase64),
         lat: profile.lat,
         lng: profile.lng,
         mapUrl,
