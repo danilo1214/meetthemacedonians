@@ -28,7 +28,7 @@ export const ReservationConfirmed = ({
         />
         <div>
           <h2 className="text-xl font-semibold text-primary-600">
-            Reservation Confirmed!
+            Reservation Confirmation
           </h2>
           <p className="text-muted-500">{profile.title}</p>
           <p className="text-sm text-muted-500">{profile.address}</p>
@@ -58,12 +58,6 @@ export const ReservationConfirmed = ({
           <p className="font-medium">{reservation.phoneNumber}</p>
           <p className="font-medium">{reservation.email}</p>
         </div>
-      </div>
-
-      {/* QR Code */}
-      <div className="space-y-2 text-center">
-        <QRCodeCanvas value={qrValue} size={160} />
-        <p className="text-sm text-muted-500">Scan this QR code on arrival</p>
       </div>
 
       {/* Map */}
