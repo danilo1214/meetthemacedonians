@@ -55,7 +55,6 @@ export const ReservationConfirmed = ({
         </div>
         <div>
           <p className="text-muted-500">Contact</p>
-          <p className="font-medium">{reservation.phoneNumber}</p>
           <p className="font-medium">{reservation.email}</p>
         </div>
       </div>

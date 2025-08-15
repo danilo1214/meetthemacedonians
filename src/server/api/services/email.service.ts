@@ -32,7 +32,7 @@ mail.setApiKey(env.SENDGRID_API_KEY);
 export async function sendReservationComplete(
   reservation: TPopulatedReservation,
 ): Promise<void> {
-  const { id, dateFrom, dateTo, profile, bags, phoneNumber } = reservation;
+  const { id, dateFrom, dateTo, profile, bags } = reservation;
 
   // 1️⃣ Generate QR code as base64 URL
   const qrCodeBase64 = await QRCode.toDataURL(
@@ -62,7 +62,6 @@ export async function sendReservationComplete(
         dateTo: new Date(dateTo).toLocaleDateString(),
         address: profile.address,
         bags,
-        phoneNumber,
         reservationId: id,
         qrCodeUrl: blob.url,
         lat: profile.lat,
