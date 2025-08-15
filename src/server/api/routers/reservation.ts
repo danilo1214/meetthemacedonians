@@ -17,7 +17,6 @@ export const createReservationValidator = z.object({
   dateFrom: z.date(),
   dateTo: z.date(),
   email: z.string(),
-  phoneNumber: z.string(),
   profileId: z.number(),
   bags: z.number(),
 });
@@ -40,7 +39,6 @@ export const reservationRouter = createTRPCRouter({
       const reservation = await createReservation({
         email: input.email,
         status: ReservationStatus.PENDING,
-        phoneNumber: input.phoneNumber,
         dateFrom: input.dateFrom,
         dateTo: input.dateTo,
         profileId: input.profileId,
