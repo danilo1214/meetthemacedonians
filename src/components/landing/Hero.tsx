@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Button } from "../generic/Button";
 
 export function Hero() {
@@ -9,10 +10,12 @@ export function Hero() {
       <p className="mx-auto mb-8 max-w-2xl text-lg opacity-90 md:text-xl">
         Book secure luggage storage in trusted local shops, hotels, and cafés.
       </p>
-      <Button
-        label="Find Storage Near Me"
-        className="rounded-full bg-white px-8 font-semibold text-primary-500 shadow-md hover:bg-gray-100"
-      />
+      <Link
+        href="/map"
+        className="rounded-full bg-white px-8 py-2 font-semibold text-primary-500 shadow-md hover:bg-gray-100"
+      >
+        Find Storage Near Me
+      </Link>
     </section>
   );
 }
