@@ -55,14 +55,15 @@ export default function Navbar({ ...props }) {
             <>
               <div className="flex w-full flex-wrap items-center lg:w-auto lg:justify-between">
                 <Link href="/">
-                  <div className="flex items-center space-x-2 text-2xl font-medium text-primary-700/75">
+                  <div className="flex items-center justify-center space-x-2 align-middle text-2xl font-medium text-primary-700/75">
                     <Image
                       loading="lazy"
                       alt="logo"
-                      width={250}
-                      height={250}
+                      width={20}
+                      height={20}
                       src="/logo.png"
                     />
+                    <div>Bag Safe</div>
                   </div>
                 </Link>
 
