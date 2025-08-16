@@ -1,37 +1,18 @@
-"use client";
+import { Button } from "../generic/Button";
 
-import Link from "next/link";
-import { getBackgroundImageStyle } from "~/util";
-
-export const Hero = () => {
-  const imageStyle = getBackgroundImageStyle({
-    width: 1600,
-    height: 800,
-    src: "/food.jpg",
-  });
-
+export function Hero() {
   return (
-    <div
-      style={{ ...imageStyle }}
-      className="h-[600px] w-full bg-cover bg-center bg-no-repeat"
-    >
-      <div className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center">
-        <h1 className="max-w-2xl text-4xl font-bold text-white drop-shadow-md sm:text-3xl">
-          Eat Dinner in a Local Macedonian Home{" "}
-        </h1>
-
-        <p className="mt-4 max-w-xl text-lg text-white drop-shadow-sm sm:text-xl">
-          Share a home-cooked meal, hear real stories, and connect through
-          culture one dinner at a time.
-        </p>
-
-        <Link
-          href="/search"
-          className="text-md mt-8 rounded bg-primary-600 px-6 py-2 font-semibold text-white shadow-md transition-transform hover:scale-105"
-        >
-          Find Your Host
-        </Link>
-      </div>
-    </div>
+    <section className="relative bg-primary-500 px-6 py-24 text-center text-white">
+      <h1 className="mb-4 text-4xl font-bold md:text-6xl">
+        Store your luggage. Explore freely.
+      </h1>
+      <p className="mx-auto mb-8 max-w-2xl text-lg opacity-90 md:text-xl">
+        Book secure luggage storage in trusted local shops, hotels, and cafés.
+      </p>
+      <Button
+        label="Find Storage Near Me"
+        className="rounded-full bg-white px-8 font-semibold text-primary-500 shadow-md hover:bg-gray-100"
+      />
+    </section>
   );
-};
+}
