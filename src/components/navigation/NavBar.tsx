@@ -20,6 +20,7 @@ import Image from "next/image";
 
 const navigation: NavigationItem[] = [
   { label: "Home", link: "/", protected: false },
+  { label: "Find Locals", link: "/search", protected: false },
   { label: "Резервации", link: "/dashboard", protected: true },
   { label: "Мој профил", link: "/account", protected: true },
 ];
@@ -55,7 +56,13 @@ export default function Navbar({ ...props }) {
               <div className="flex w-full flex-wrap items-center lg:w-auto lg:justify-between">
                 <Link href="/">
                   <div className="flex items-center space-x-2 text-2xl font-medium text-primary-700/75">
-                    Easy Luggage
+                    <Image
+                      loading="lazy"
+                      alt="logo"
+                      width={250}
+                      height={250}
+                      src="/logo.png"
+                    />
                   </div>
                 </Link>
 

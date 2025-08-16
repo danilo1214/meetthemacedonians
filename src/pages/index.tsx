@@ -2,7 +2,6 @@ import { Meta } from "~/components/generic/Meta";
 import { Hero } from "~/components/landing/Hero";
 import { HowItWorks } from "~/components/landing/HowItWorks";
 import { Benefits } from "~/components/landing/Benefits";
-import { CTASection } from "~/components/landing/CTASection";
 import { ProfileMap } from "~/components/map/ProfileMap";
 
 export default function Home() {
