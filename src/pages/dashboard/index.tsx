@@ -15,26 +15,6 @@ export default function Dashboard() {
 
   return (
     <main className="p-4">
-      {requests?.length === 0 && reservations?.length === 0 && (
-        <h2 className="text-2xl font-semibold">
-          Во моментов немате предстоечки резервации
-        </h2>
-      )}
-
-      {requests && requests.length > 0 && (
-        <>
-          <h2 className="text-2xl font-semibold">Your requests</h2>
-          <div className="mb-16 flex flex-col gap-y-10">
-            {requests?.map((reservation) => (
-              <ReservationRequest
-                key={reservation.id}
-                reservation={reservation}
-              />
-            ))}
-          </div>
-        </>
-      )}
-
       {reservations && reservations.length > 0 && (
         <>
           <h2 className="text-2xl font-semibold">Your upcoming reservations</h2>

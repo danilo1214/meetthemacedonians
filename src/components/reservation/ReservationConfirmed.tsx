@@ -15,6 +15,10 @@ export const ReservationConfirmed = ({
 }: ReservationConfirmationProps) => {
   const { profile } = reservation;
 
+  const formatReservationNumber = (id: number) => {
+    return String(id).padStart(5, "0");
+  };
+
   const qrValue = `reservation:${reservation.id}`;
 
   return (
@@ -28,7 +32,10 @@ export const ReservationConfirmed = ({
         />
         <div>
           <h2 className="text-xl font-semibold text-primary-600">
-            Reservation Confirmation
+            Reservation Confirmation{" "}
+            <span className="text-primary-500">
+              {formatReservationNumber(reservation.id)}
+            </span>
           </h2>
           <p className="text-muted-500">{profile.title}</p>
           <p className="text-sm text-muted-500">{profile.address}</p>

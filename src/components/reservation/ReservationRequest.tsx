@@ -1,4 +1,3 @@
-import { ProfileStatus } from "@prisma/client";
 import { useState } from "react";
 import { Modal } from "~/components/generic/Modal";
 import { type TPopulatedReservation } from "~/server/api/types";
@@ -53,6 +52,10 @@ export const ReservationRequest = ({
     setModalState({ isOpen: false });
   };
 
+  const formatReservationNumber = (id: number) => {
+    return String(id).padStart(5, "0");
+  };
+
   return (
     <div className="my-10 max-w-lg rounded-2xl bg-white">
       {modalState.action && (
@@ -75,6 +78,13 @@ export const ReservationRequest = ({
         <div className="flex items-center gap-2">
           <span className="font-medium">📅 Date:</span>
           <span>{new Date(reservation.dateFrom).toISOString()}</span>
+        </div>
+
+        <div>
+          Confirmation:{" "}
+          <span className="text-primary-500">
+            {formatReservationNumber(reservation.id)}
+          </span>
         </div>
       </div>
     </div>
